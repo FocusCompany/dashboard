@@ -44,7 +44,7 @@ class Account extends React.Component {
             }
         }
         console.log(inputs);
-        callAPI('/update_user', inputs, 'PUT', { 'Authorization': ('Bearer ' + localStorage.token) })
+        callRenewAPI('/update_user', inputs, 'PUT', null, true)
         .then((res => {
             Toast.info('Updated account informations');
             this.resetFields();
@@ -57,7 +57,7 @@ class Account extends React.Component {
     deleteAccount() {
         if (this.state.inputs.password.length === 0)
             return Toast.error('You must enter your password to delete your account');
-        callAPI('/delete_user', {password: this.state.inputs.password}, 'DELETE', { 'Authorization': ('Bearer ' + localStorage.token) })
+        callRenewAPI('/delete_user', {password: this.state.inputs.password}, 'DELETE', null, true)
         .then(res => {
             Toast.success('Your account has been deleted');
             this.props.logOut(null, true);

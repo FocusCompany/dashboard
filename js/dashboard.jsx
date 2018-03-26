@@ -25,7 +25,7 @@ class Dashboard extends React.Component {
             this.props.changeLoggedInState(false);
             return;
         }
-        callAPI(all === true ? '/delete_all_jwt' : '/delete_jwt', null, 'DELETE', { 'Authorization': ('Bearer ' + localStorage.token) })
+        callRenewAPI(all === true ? '/delete_all_jwt' : '/delete_jwt', null, 'DELETE', null, true)
         .then(res => {
             Toast.success('Logging out...');
             this.props.changeLoggedInState(false);
