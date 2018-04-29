@@ -1,1 +1,0 @@
-const APIRoot = "http://focus.was-lost-in.space/auth"
