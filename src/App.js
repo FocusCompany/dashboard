@@ -1,21 +1,30 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Dashboard from './Dashboard';
+import SignForm from './SignForm';
 
-class App extends Component {
+export default class App extends Component {
+  constructor(props) {
+      super(props);
+      localStorage.isLoggedIn = (typeof localStorage.isLoggedIn === 'undefined') ? "false" : localStorage.isLoggedIn;
+      this.state = {isLoggedIn: localStorage.isLoggedIn === "true"}; // Some (Firefox + ???) have local storage as strings only
+
+      this.changeLoggedInState = this.changeLoggedInState.bind(this);
+  }
+  
+  changeLoggedInState(b, token) {
+      localStorage.isLoggedIn = b;
+      localStorage.token = token;
+      this.setState({isLoggedIn: b});
+  }
+
   render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
+      if (this.state.isLoggedIn === true)
+          return (
+              <Dashboard changeLoggedInState={this.changeLoggedInState} />
+          );
+      else // For indentation clarity
+          return (
+              <SignForm type="SignUp" changeLoggedInState={this.changeLoggedInState} />
+          );
   }
 }
-
-export default App;
