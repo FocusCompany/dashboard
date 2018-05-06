@@ -3,8 +3,6 @@ import BigCalendar from 'react-big-calendar';
 import Graph from './Graph';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
-let allViews = Object.keys(BigCalendar.Views).map(k => BigCalendar.Views[k]);
-
 class Calendar extends Graph {
     render() {
         return (
