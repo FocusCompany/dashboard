@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import BigCalendar from 'react-big-calendar';
 import Graph from './Graph';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
