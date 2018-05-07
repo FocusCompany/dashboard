@@ -1,43 +1,79 @@
 import React, { Component } from 'react';
-import './Util';
-//import './Graphs';
-import $ from "jquery";
+import { getGraphData, callRenewAPI, Toast } from  './Util';
+import PieGraph from './PieGraph';
+import ColumnGraph from './ColumnGraph';
+import BarGraph from './BarGraph';
 
 export default class Home extends Component {
-    render() {
-        var data = $.ajax({
-            type: 'GET',
-            url: 'http://backend.thefocuscompany.me:1234/data',
-            crossDomain: true,
-            async: false
-        });
-        console.log(data);
+	constructor(props) {
+		super(props);
 
-        if (data.statusText === "error")
-            return (<div><h1>Data fetch error</h1></div>);
+		this.state = {
+			devices: [],
+			device: -1
+		}
+	}
 
-        /* return (<div className="container">
-            <div className="row justify-content-md-center">
-                <div className="col-9">
-                    <div className="card bg-light mb-3">
-                        <div className="card-header">Recent Activities</div>
-                        <div className="card-body">
-                            <BarChart width="100%" data={JSON.parse(data.responseText)} name="chart"/>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div className="row justify-content-md-center">
-                <div className="col-9">
-                    <div className="card bg-light mb-3">
-                        <div className="card-header">Recent Activities</div>
-                        <div className="card-body">
-                            <GraphJS data={JSON.parse(data.responseText)}/>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>); */
-        return (<div className="container">Placeholder waiting for graphs fixes</div>);
-    }
+	componentDidMount() {
+		callRenewAPI('/get_devices', null, 'GET', null, true)
+		.then(res => {
+			this.setState({devices: res.devices});
+			console.log(res.devices);
+		})
+		.catch(err => {
+			console.log(err);
+			Toast.error("Could not get device list: " + err);
+		});
+	}
+
+	render() {
+		const data = getGraphData();
+
+		console.log(data);
+
+		return (
+		<div className="container">
+			<div className="row justify-content-md-center">			
+				<div className="col-12">
+					<div className="card bg-light mb-3">
+						<div className="card-body">
+							<div class="form-group">
+								<select class="form-control" id="selectDevice">
+									{this.state.devices.map(e => <option>{`${e.devices_name} (${e.collections_name})`}</option>)}
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div className="row justify-content-md-center">
+				<div className="col-5">
+					<div className="card bg-light mb-3">
+						<div className="card-header">Recent Activities</div>
+						<div className="card-body">
+							<PieGraph data={data} height="300px"/>
+						</div>
+					</div>
+				</div>
+				<div className="col-7">
+					<div className="card bg-light mb-3">
+						<div className="card-header">Recent Activities</div>
+						<div className="card-body">
+							<ColumnGraph data={data} height="300px"/>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div className="row justify-content-md-center">
+				<div className="col-12">
+					<div className="card bg-light mb-3">
+						<div className="card-header">Recent Activities</div>
+						<div className="card-body">
+							<BarGraph data={data} height="300px"/>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>);
+	}
 }

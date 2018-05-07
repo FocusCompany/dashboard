@@ -1,1 +1,0 @@
-const APIRoot = "http://auth.thefocuscompany.me:3000/api/v1";
