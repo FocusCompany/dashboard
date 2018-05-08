@@ -25,7 +25,7 @@ const stubData = [
 ];
 
 function getDate(d) {
-	return `${d.getFullYear()}-${('00' + d.getMonth()).slice(-2)}-${('00' + d.getDate()).slice(-2)}`
+	return `${d.getFullYear()}-${('00' + (d.getMonth() + 1)).slice(-2)}-${('00' + d.getDate()).slice(-2)}`
 }
 
 function getTime(d) {
