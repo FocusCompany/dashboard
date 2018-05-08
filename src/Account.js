@@ -100,7 +100,7 @@ export default class Account extends Component {
 					(<tr key={i}>
 						<td>{e.id_devices}</td>
 						<td>{e.devices_name}</td>
-						<td>{e.collections_name}</td>
+						<td>{e.collections_name || "NONE"}</td>
 					</tr>))
 				}
 			</tbody>
