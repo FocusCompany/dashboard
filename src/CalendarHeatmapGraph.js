@@ -17,7 +17,7 @@ class CalendarHeatmapGraph extends Graph {
 
 	render() {
 		return (
-			<div ref={this.myRef} style={{width: this.state.width, height: this.state.height}}>
+			<div ref={this.myRef} style={{width: this.state.width, height: this.state.height, overflowX: "auto"}}>
 				<CalendarHeatmap
 					data={this.state.data}
 					overview={this.state.overview}
