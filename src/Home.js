@@ -15,31 +15,40 @@ export default class Home extends Component {
 
 		this.state = {
 			devices: [],
-			device: -1,
+			device: 0,
 			calendar: [], // Calendar data
 			total: [], // Processes data, pie and bar for now
 			heatmap: [], // Heatmap data
 		}
 
 		this.refreshData = this.refreshData.bind(this);
+		this.selectDevice = this.selectDevice.bind(this);
 	}
 
 	refreshData() {
-		const total = GraphData.get('total');
-		const heatmap = GraphData.get('heatmap');
-
-		this.setState({ total: total, heatmap: heatmap });
+		const options = { device: this.state.device, start: 0, end: Date.now() };
+		GraphData.get('total', options).then(data => {
+			this.setState({ total: data });			
+		});
+		GraphData.get('heatmap', options).then(data => {
+			this.setState({ heatmap: data });
+		});
 	}
 
 	componentDidMount() {
 		callRenewAPI('/get_devices', null, 'GET', null, true)
 		.then(res => {
 			this.setState({devices: res.devices});
+			this.refreshData();
 		})
 		.catch(err => {
 			Toast.error("Could not get device list: " + err);
 		});
+	}
 
+	selectDevice(event) {
+		event.preventDefault();
+		this.setState({device: event.target.value});
 		this.refreshData();
 	}
 
@@ -51,8 +60,8 @@ export default class Home extends Component {
 					<div className="card bg-light mb-3">
 						<div className="card-body">
 							<div className="form-group">
-								<select className="form-control" id="selectDevice">
-									{this.state.devices.map(e => <option key={`${e.id_devices}/${e.id_collections}`}>{`${e.devices_name} (${e.collections_name})`}</option>)}
+								<select onChange={this.selectDevice} className="form-control" id="selectDevice" value={this.state.device}>
+									{this.state.devices.map(e => <option value={e.id_devices} key={`${e.id_devices}/${e.id_collections}`}>{`${e.devices_name} (${e.collections_name})`}</option>)}
 								</select>
 							</div>
 						</div>

@@ -7,7 +7,8 @@ const APIRoot = "http://auth.thefocuscompany.me:3000/api/v1";
 export const Toast = {
 	error: (text, title) => toast.error(text),
 	info: (text, title) => toast.info(text),
-	success: (text, title) => toast.success(text)
+	success: (text, title) => toast.success(text),
+	warning: (text, title) => toast.warn(text)
 }
 
 /* const Toast = {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComposedChart, Bar, XAxis, YAxis } from 'recharts';
+import { ComposedChart, Bar, XAxis, YAxis, LabelList } from 'recharts';
 import Graph from './Graph';
 
 class BarGraph extends Graph {
@@ -9,7 +9,9 @@ class BarGraph extends Graph {
 				<ComposedChart layout="vertical" width={this.state.pixelWidth} height={this.state.pixelHeight} data={this.state.data} margin={{top: 20, right: 20, bottom: 20, left: 20}}>
 					<XAxis type="number"/>
 					<YAxis dataKey="process" type="category"/>
-					<Bar dataKey="length" fill="#8884d8" />
+					<Bar dataKey="length" fill="#8884d8">
+						<LabelList dataKey="length" position="insideRight" />
+					</Bar>
 				</ComposedChart>
 			</div>
 		);

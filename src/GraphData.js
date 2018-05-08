@@ -1,3 +1,6 @@
+import $ from 'jquery';
+import { Toast } from './Util';
+
 const stubData = [
 	{
 		"process": "Gnome-terminal",
@@ -82,18 +85,33 @@ const processor = { total: makeTotalData, heatmap: makeHeatmapData };
 export default class graphData {
 	// Fetch from API
 	static fetch(options) {
-		return stubData;
+		return $.ajax({
+			type: 'POST',
+			url: 'http://backend.thefocuscompany.me:1234/process',
+			crossDomain: true,
+			data: options,
+			dataType: 'json',
+			timeout: 5
+		});
 	}
-
-	// types = ['total', 'calendar', 'heatmap']
 
 	// Fecthes() then converts to type
 	static get(type, options) {
-		const data = this.fetch(options);
-		if (processor[type]) {
-			return processor[type](data);
-		} else {
-			return [];
-		}
+		return new Promise((resolve, reject) => {
+			this.fetch(options).then(data => {
+				if (processor[type]) {
+					resolve(processor[type](this.data));
+				} else {
+					reject("Unknown data type");
+				}
+			}).catch(err => {
+				Toast.warning(`Could not fetch data for ${type}, using stub`);
+				if (processor[type]) {
+					resolve(processor[type](stubData));
+				} else {
+					reject("Unknown data type");
+				}
+			})
+		})
 	}
 }
