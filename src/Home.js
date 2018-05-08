@@ -47,7 +47,8 @@ export default class Home extends Component {
 			this.refreshData();
 		})
 		.catch(err => {
-			Toast.error("Could not get device list: " + err);
+			console.log(err);
+			Toast.error("Could not get device list");
 		});
 	}
 
@@ -88,7 +89,7 @@ export default class Home extends Component {
 					<div className="card bg-light mb-3">
 						<div className="card-header">Total time spent</div>
 						<div className="card-body">
-							<PieGraph data={this.state.total} height="300px"/>
+							{ this.state.total.length > 0 ? <PieGraph data={this.state.total} height="300px"/> : "No total data" }
 						</div>
 					</div>
 				</div>
@@ -96,7 +97,7 @@ export default class Home extends Component {
 					<div className="card bg-light mb-3">
 						<div className="card-header">Activity Summary</div>
 						<div className="card-body">
-							<HalfPieGraph data={this.state.summary} height="300px"/>
+							{ this.state.total.length > 0 ? <HalfPieGraph data={this.state.summary} height="300px"/> : "No summary data" }
 						</div>
 					</div>
 				</div>
@@ -104,9 +105,9 @@ export default class Home extends Component {
 			<div className="row justify-content-md-center">
 				<div className="col-12">
 					<div className="card bg-light mb-3">
-						<div className="card-header">Recent Activities</div>
+						<div className="card-header">Process Activity</div>
 						<div className="card-body">
-							<ColumnGraph data={this.state.total} height="300px"/>
+							{ this.state.total.length > 0 ? <ColumnGraph data={this.state.total} height="300px"/> : "No process activity data" }
 						</div>
 					</div>
 				</div>
@@ -114,9 +115,9 @@ export default class Home extends Component {
 			<div className="row justify-content-md-center">
 				<div className="col-12">
 					<div className="card bg-light mb-3">
-						<div className="card-header">Recent Activities</div>
+						<div className="card-header">Process Activity</div>
 						<div className="card-body">
-							<BarGraph data={this.state.total} height="300px"/>
+							{ this.state.total.length > 0 ? <BarGraph data={this.state.total} height="300px"/> : "No process activity data" }
 						</div>
 					</div>
 				</div>

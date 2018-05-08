@@ -13,7 +13,7 @@ class HalfPieGraph extends Graph {
         return (
             <div ref={this.myRef} style={{width: this.state.width, height: this.state.height}}>
                 <PieChart width={this.state.pixelWidth} height={this.state.pixelHeight} margin={{top: 20, right: 20, bottom: 20, left: 20}}>
-                    <Pie startAngle={180} endAngle={0} innerRadius={40} outerRadius={80} data={this.state.data} nameKey="name" dataKey="percent" label>
+                    <Pie startAngle={180} endAngle={0} innerRadius={40} outerRadius={80} data={this.state.data} nameKey="name" dataKey="value" label>
                         {this.state.data.map((entry, index) => <Cell key={index} fill={this.props.colors[index % this.props.colors.length]}/>)}
                         {label}
                     </Pie>

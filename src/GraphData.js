@@ -115,13 +115,13 @@ const processor = { total: makeTotalData, heatmap: makeHeatmapData, summary: mak
 export default class graphData {
 	// Fetch from API
 	static fetch(options) {
+		console.log(options);
 		return $.ajax({
 			type: 'POST',
 			url: 'http://backend.thefocuscompany.me:1234/process',
 			crossDomain: true,
 			data: options,
-			dataType: 'json',
-			timeout: 5
+			dataType: 'json'
 		});
 	}
 
@@ -130,7 +130,7 @@ export default class graphData {
 		return new Promise((resolve, reject) => {
 			this.fetch(options).then(data => {
 				if (processor[type]) {
-					resolve(processor[type](this.data));
+					resolve(processor[type](data));
 				} else {
 					reject("Unknown data type");
 				}

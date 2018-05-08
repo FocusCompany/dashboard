@@ -26,9 +26,12 @@ class Graph extends Component {
 	}
 
 	updateState() {
-		var width = typeof this.state.width === "string" ? this.myRef.current.clientWidth : this.state.width;
-		var height = typeof this.state.height === "string" ? this.myRef.current.clientHeight : this.state.height;
-		this.setState({width: this.state.width, pixelWidth: width, height: this.state.height, pixelHeight: height, data: this.state.data});
+		// Quick fix for https://i.lazyshp.ee/89e9d595.png
+		if (this.myRef && this.myRef.current) {
+			var width = typeof this.state.width === "string" ? this.myRef.current.clientWidth : this.state.width;
+			var height = typeof this.state.height === "string" ? this.myRef.current.clientHeight : this.state.height;
+			this.setState({width: this.state.width, pixelWidth: width, height: this.state.height, pixelHeight: height, data: this.state.data});
+		}
 	}
 
 	componentDidMount() {

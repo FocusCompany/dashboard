@@ -80,7 +80,7 @@ export default class Account extends Component {
 		})
 		.catch(err => {
 			console.log(err);
-			Toast.error("Could not get device list: " + err);
+			Toast.error("Could not get device list");
 		});
 	}
 
