@@ -16,6 +16,11 @@ const stubData = [
 		"process": "jetbrains-clion",
 		"start": 1525547569000,
 		"end": 1525547571000
+	},
+	{
+		"idle": true,
+		"start": 1525347569000,
+		"end": 1525347571000
 	}
 ];
 
@@ -28,14 +33,12 @@ function getTime(d) {
 }
 
 /*
-{
-  "date": "2016-01-01",
-  "total": 17164,
-  "details": [{
-    "name": "Project 1",
-    "date": "2016-01-01 12:30:45",
-    "value": 9192
-}
+"date": "2016-01-01",
+"total": 17164,
+	"details": [{
+	"name": "Project 1",
+	"date": "2016-01-01 12:30:45",
+	"value": 9192}]
 */
 
 function makeHeatmapData(data) {
@@ -55,7 +58,7 @@ function makeHeatmapData(data) {
 			global.push(item);
 		}
 		item.details.push({
-			name: e.process,
+			name: e.idle ? "Idle" : e.process,
 			date: `${dateStr} ${timeStr}`,
 			value: Math.abs(e.end - e.start)
 		})
@@ -67,20 +70,47 @@ function makeHeatmapData(data) {
 function makeTotalData(data) {
 	let total = [];
 	data.forEach(e => {
-		let item = total.find(i => i.process === e.process);
-		if (!item) {
-			item = {
-				process: e.process,
-				length: 0
-			};
-			total.push(item);
+		if (!e.idle) {
+			let item = total.find(i => i.process === (e.idle ? "Idle" : e.process));
+			if (!item) {
+				item = {
+					process: (e.idle ? "Idle" : e.process),
+					length: 0
+				};
+				total.push(item);
+			}
+			item.length += Math.abs(e.end - e.start);
 		}
-		item.length += Math.abs(e.end - e.start);
 	});
 	return total;
 }
 
-const processor = { total: makeTotalData, heatmap: makeHeatmapData };
+function makeActivitySummary(data) {
+	let sum = [
+		{
+			name: 'Activity',
+			value: 0
+		},
+		{
+			name: 'Idle',
+			value: 0
+		}
+	];
+
+	let total = 0;
+
+	data.forEach(e => {
+		sum[e.idle ? 1 : 0].value += Math.abs(e.end - e.start);
+		total += Math.abs(e.end - e.start);
+	});
+
+	sum.forEach(e => {
+		e.percent = Math.round(e.value / total * 100);
+	})
+	return sum;
+}
+
+const processor = { total: makeTotalData, heatmap: makeHeatmapData, summary: makeActivitySummary };
 
 export default class graphData {
 	// Fetch from API

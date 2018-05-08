@@ -4,6 +4,7 @@ import { callRenewAPI, Toast } from  './Util';
 import PieGraph from './PieGraph';
 import ColumnGraph from './ColumnGraph';
 import BarGraph from './BarGraph';
+import HalfPieGraph from './HalfPieGraph';
 // import Calendar from './Calendar';
 import CalendarHeatmapGraph from './CalendarHeatmapGraph';
 
@@ -19,6 +20,7 @@ export default class Home extends Component {
 			calendar: [], // Calendar data
 			total: [], // Processes data, pie and bar for now
 			heatmap: [], // Heatmap data
+			summary: [] // Idle vs activity half pie
 		}
 
 		this.refreshData = this.refreshData.bind(this);
@@ -32,6 +34,9 @@ export default class Home extends Component {
 		});
 		GraphData.get('heatmap', options).then(data => {
 			this.setState({ heatmap: data });
+		});
+		GraphData.get('summary', options).then(data => {
+			this.setState({ summary: data });
 		});
 	}
 
@@ -78,7 +83,7 @@ export default class Home extends Component {
 					</div>
 				</div>
 			</div>
-			<div className="row justify-content-md-center">
+			<div className="row justify-content-between">
 				<div className="col-5">
 					<div className="card bg-light mb-3">
 						<div className="card-header">Total time spent</div>
@@ -87,7 +92,17 @@ export default class Home extends Component {
 						</div>
 					</div>
 				</div>
-				<div className="col-7">
+				<div className="col-5">
+					<div className="card bg-light mb-3">
+						<div className="card-header">Activity Summary</div>
+						<div className="card-body">
+							<HalfPieGraph data={this.state.summary} height="300px"/>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div className="row justify-content-md-center">
+				<div className="col-12">
 					<div className="card bg-light mb-3">
 						<div className="card-header">Recent Activities</div>
 						<div className="card-body">

@@ -77,7 +77,6 @@ export default class Account extends Component {
 		callRenewAPI('/get_devices', null, 'GET', null, true)
 		.then(res => {
 			this.setState({devices: res.devices});
-			console.log(res.devices);
 		})
 		.catch(err => {
 			console.log(err);
@@ -97,8 +96,8 @@ export default class Account extends Component {
 			</thead>
 			<tbody>
 				{
-					this.state.devices.map(e => 
-					(<tr>
+					this.state.devices.map((e, i) => 
+					(<tr key={i}>
 						<td>{e.id_devices}</td>
 						<td>{e.devices_name}</td>
 						<td>{e.collections_name}</td>
