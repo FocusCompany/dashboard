@@ -1,33 +1,37 @@
 import React from 'react';
-import { PieChart, Pie, Cell } from 'recharts';
+import { PieChart, Pie, Cell, Legend, Tooltip } from 'recharts';
+import PropTypes from 'prop-types';
 import Graph from './Graph';
 
-const RADIAN = Math.PI / 180;
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 class PieGraph extends Graph {
     render() {
-        const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
-            const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-            const x = cx + radius * Math.cos(-midAngle * RADIAN);
-            const y = cy + radius * Math.sin(-midAngle * RADIAN);
-        
-            return (
-                <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central">
-                    {this.state.data[index].process}
-                </text>
-            );
-        };
+        var legend = this.props.legend ? (<Legend layout="vertical" align="right" verticalAlign="middle"/>) : null;
+        var tooltip = this.props.tooltip ? (<Tooltip />) : null;
         return (
             <div ref={this.myRef} style={{width: this.state.width, height: this.state.height}}>
                 <PieChart width={this.state.pixelWidth} height={this.state.pixelHeight} margin={{top: 20, right: 20, bottom: 20, left: 20}}>
-                    <Pie data={this.state.data} dataKey="length" labelLine={false} label={renderCustomizedLabel}>
+                    <Pie data={this.state.data} nameKey="process" dataKey="length">
                         {this.state.data.map((entry, index) => <Cell key={index} fill={COLORS[index % COLORS.length]}/>)}
                     </Pie>
+                    {legend}
+                    {tooltip}
                 </PieChart>
             </div>
         );
     }
 }
+
+PieGraph.propTypes = {
+    data: PropTypes.array.isRequired
+}
+
+PieGraph.defaultProps = {
+    width: "100%",
+	height: "100%",
+    legend: true,
+    tooltip: true
+};
 
 export default PieGraph;
