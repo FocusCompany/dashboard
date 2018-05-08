@@ -28,16 +28,20 @@ export default class Home extends Component {
 	}
 
 	refreshData() {
-		const options = { device: this.state.device, start: 0, end: Date.now() };
-		GraphData.get('total', options).then(data => {
-			this.setState({ total: data });			
-		});
-		GraphData.get('heatmap', options).then(data => {
-			this.setState({ heatmap: data });
-		});
-		GraphData.get('summary', options).then(data => {
-			this.setState({ summary: data });
-		});
+		if (this.state.devices[this.state.device]) {
+			const options = { device: this.state.devices[this.state.device].id_devices, start: 0, end: Date.now() };
+			GraphData.get('total', options).then(data => {
+				this.setState({ total: data });			
+			});
+			GraphData.get('heatmap', options).then(data => {
+				this.setState({ heatmap: data });
+			});
+			GraphData.get('summary', options).then(data => {
+				this.setState({ summary: data });
+			});
+		} else {
+			console.log(`Invalid device index ${this.state.device}`);
+		}
 	}
 
 	componentDidMount() {
