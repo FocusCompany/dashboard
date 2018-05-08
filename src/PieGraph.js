@@ -8,7 +8,7 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 class PieGraph extends Graph {
     render() {
         var legend = this.props.legend ? (<Legend layout="vertical" align="right" verticalAlign="middle"/>) : null;
-        var tooltip = this.props.tooltip ? (<Tooltip />) : null;
+        var tooltip = this.props.tooltip ? (<Tooltip/>) : null;
         return (
             <div ref={this.myRef} style={{width: this.state.width, height: this.state.height}}>
                 <PieChart width={this.state.pixelWidth} height={this.state.pixelHeight} margin={{top: 20, right: 20, bottom: 20, left: 20}}>
@@ -31,7 +31,8 @@ PieGraph.defaultProps = {
     width: "100%",
 	height: "100%",
     legend: true,
-    tooltip: true
+    tooltip: true,
+    colors: COLORS
 };
 
 export default PieGraph;
