@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComposedChart, Bar, XAxis, YAxis, LabelList } from 'recharts';
+import { ComposedChart, Bar, XAxis, YAxis, Tooltip } from 'recharts';
 import Graph from './Graph';
 
 function getFont() {
@@ -31,9 +31,8 @@ class BarGraph extends Graph {
 				<ComposedChart layout="vertical" width={this.state.pixelWidth} height={this.state.pixelHeight} data={this.state.data} margin={{top: 20, right: 20, bottom: 20, left: 20}}>
 					<XAxis type="number"/>
 					<YAxis dataKey="process" type="category" width={maxWidth}/>
-					<Bar dataKey="length" fill="#8884d8">
-						<LabelList dataKey="length" position="insideRight" />
-					</Bar>
+					<Bar dataKey="length" fill="#8884d8" />
+					<Tooltip cursor={false}/>
 				</ComposedChart>
 			</div>
 		);

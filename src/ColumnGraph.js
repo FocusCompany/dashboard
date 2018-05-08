@@ -1,5 +1,5 @@
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts';
 import Graph from './Graph';
 
 class ColumnGraph extends Graph {
@@ -9,7 +9,8 @@ class ColumnGraph extends Graph {
 				<BarChart width={this.state.pixelWidth} height={this.state.pixelHeight} data={this.state.data} margin={{top: 20, right: 20, bottom: 20, left: 20}}>
 					<XAxis dataKey="process" type="category"/>
 					<YAxis type="number"/>
-					<Bar dataKey="length" fill="#8884d8" />
+					<Bar dataKey="length" fill="#8884d8"/>
+					<Tooltip cursor={false}/>
 				</BarChart>
 			</div>
 		);
