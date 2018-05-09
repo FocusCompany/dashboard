@@ -28,6 +28,7 @@ export default class Home extends Component {
 	}
 
 	refreshData() {
+		console.log(this.state.device, this.state.devices[this.state.device]);
 		if (this.state.devices[this.state.device]) {
 			const options = { device: this.state.devices[this.state.device].id_devices, start: 0, end: Math.floor(Date.now() / 1000) };
 			GraphData.get('total', options, true).then(data => {
@@ -58,7 +59,9 @@ export default class Home extends Component {
 
 	selectDevice(event) {
 		event.preventDefault();
-		this.setState({device: event.target.value});
+		// eslint-disable-next-line
+		this.state.device = parseInt(event.target.value, 10);
+		this.setState({device: parseInt(event.target.value, 10)});
 		this.refreshData();
 	}
 
