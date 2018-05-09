@@ -71,10 +71,10 @@ function makeTotalData(data) {
 	let total = [];
 	data.forEach(e => {
 		if (!e.idle) {
-			let item = total.find(i => i.process === (e.idle ? "Idle" : e.process));
+			let item = total.find(i => i.process === (!e.process ? "Idle" : e.process));
 			if (!item) {
 				item = {
-					process: (e.idle ? "Idle" : e.process),
+					process: (!e.process ? "Idle" : e.process),
 					length: 0
 				};
 				total.push(item);
