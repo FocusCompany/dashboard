@@ -29,7 +29,7 @@ export default class Home extends Component {
 
 	refreshData() {
 		if (this.state.devices[this.state.device]) {
-			const options = { device: this.state.devices[this.state.device].id_devices, start: 0, end: Date.now() };
+			const options = { device: this.state.devices[this.state.device].id_devices, start: 0, end: Math.floor(Date.now() / 1000) };
 			GraphData.get('total', options).then(data => {
 				this.setState({ total: data });			
 				GraphData.get('heatmap', options).then(data => {

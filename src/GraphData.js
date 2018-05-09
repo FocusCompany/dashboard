@@ -4,23 +4,23 @@ import { Toast } from './Util';
 const stubData = [
 	{
 		"process": "Gnome-terminal",
-		"start": 1525537363000,
-		"end": 1525537365000
+		"start": 1525537363,
+		"end": 1525537365
 	},
 	{
 		"process": "Main.py",
-		"start": 1525537360000,
-		"end": 1525537369000
+		"start": 1525537360,
+		"end": 1525537369
 	},
 	{
 		"process": "jetbrains-clion",
-		"start": 1525547569000,
-		"end": 1525547571000
+		"start": 1525547569,
+		"end": 1525547571
 	},
 	{
 		"idle": true,
-		"start": 1525347569000,
-		"end": 1525347571000
+		"start": 1525347569,
+		"end": 1525347571
 	}
 ];
 
@@ -79,7 +79,7 @@ function makeTotalData(data) {
 				};
 				total.push(item);
 			}
-			item.length += Math.abs(e.end - e.start) / 60;
+			item.length += Math.abs(e.end - e.start);
 		}
 	});
 	return total;
@@ -102,8 +102,8 @@ function makeActivitySummary(data) {
 	let total = 0;
 
 	data.forEach(e => {
-		sum[e.idle ? 1 : 0].value += Math.abs(e.end - e.start) / 60;
-		total += Math.abs(e.end - e.start) / 60;
+		sum[e.idle ? 1 : 0].value += Math.abs(e.end - e.start);
+		total += Math.abs(e.end - e.start);
 	});
 
 	sum.forEach(e => {
