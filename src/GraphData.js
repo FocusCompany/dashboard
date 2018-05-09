@@ -44,7 +44,7 @@ function getTime(d) {
 function makeHeatmapData(data) {
 	let global = [];
 	data.forEach(e => {
-		const date = new Date(e.start);
+		const date = new Date(e.start * 1000);
 		const dateStr = getDate(date);
 		const timeStr = getTime(date);
 
@@ -79,7 +79,7 @@ function makeTotalData(data) {
 				};
 				total.push(item);
 			}
-			item.length += Math.abs(e.end - e.start);
+			item.length += Math.abs(e.end - e.start) / 60;
 		}
 	});
 	return total;
@@ -89,30 +89,34 @@ function makeActivitySummary(data) {
 	let sum = [
 		{
 			name: 'Activity',
-			value: 0
+			value: 0,
+			percent: 0
 		},
 		{
 			name: 'Idle',
-			value: 0
+			value: 0,
+			percent: 0
 		}
 	];
 
 	let total = 0;
 
 	data.forEach(e => {
-		sum[e.idle ? 1 : 0].value += Math.abs(e.end - e.start);
-		total += Math.abs(e.end - e.start);
+		sum[e.idle ? 1 : 0].value += Math.abs(e.end - e.start) / 60;
+		total += Math.abs(e.end - e.start) / 60;
 	});
 
 	sum.forEach(e => {
 		e.percent = Math.round(e.value / total * 100);
 	})
+	console.log(sum);
 	return sum;
 }
 
 const processor = { total: makeTotalData, heatmap: makeHeatmapData, summary: makeActivitySummary };
 
 export default class graphData {
+	static data = null;
 	// Fetch from API
 	static fetch(options) {
 		console.log(options);
@@ -128,20 +132,29 @@ export default class graphData {
 	// Fecthes() then converts to type
 	static get(type, options) {
 		return new Promise((resolve, reject) => {
-			this.fetch(options).then(data => {
+			if (!this.data) {
+				this.fetch(options).then(data => {
+					this.data = data;
+					if (processor[type]) {
+						resolve(processor[type](data));
+					} else {
+						reject("Unknown data type");
+					}
+				}).catch(err => {
+					Toast.warning(`Could not fetch data for ${type}, using stub`);
+					if (processor[type]) {
+						resolve(processor[type](stubData));
+					} else {
+						reject("Unknown data type");
+					}
+				})
+			} else {
 				if (processor[type]) {
-					resolve(processor[type](data));
+					resolve(processor[type](this.data));
 				} else {
 					reject("Unknown data type");
 				}
-			}).catch(err => {
-				Toast.warning(`Could not fetch data for ${type}, using stub`);
-				if (processor[type]) {
-					resolve(processor[type](stubData));
-				} else {
-					reject("Unknown data type");
-				}
-			})
+			}
 		})
 	}
 }

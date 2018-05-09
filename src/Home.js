@@ -32,12 +32,12 @@ export default class Home extends Component {
 			const options = { device: this.state.devices[this.state.device].id_devices, start: 0, end: Date.now() };
 			GraphData.get('total', options).then(data => {
 				this.setState({ total: data });			
-			});
-			GraphData.get('heatmap', options).then(data => {
-				this.setState({ heatmap: data });
-			});
-			GraphData.get('summary', options).then(data => {
-				this.setState({ summary: data });
+				GraphData.get('heatmap', options).then(data => {
+					this.setState({ heatmap: data });
+					GraphData.get('summary', options).then(data => {
+						this.setState({ summary: data });
+					});
+				});
 			});
 		} else {
 			console.log(`Invalid device index ${this.state.device}`);
@@ -71,7 +71,7 @@ export default class Home extends Component {
 						<div className="card-body">
 							<div className="form-group">
 								<select onChange={this.selectDevice} className="form-control" id="selectDevice" value={this.state.device}>
-									{this.state.devices.map(e => <option value={e.id_devices} key={`${e.id_devices}/${e.id_collections}`}>{`${e.devices_name} (${e.collections_name || 'NONE'})`}</option>)}
+									{this.state.devices.map(e => <option value={e.id_devices} key={`${e.id_devices}/${e.id_collections}`}>{`${e.devices_name}${e.collections_name ? ` (${e.collections_name})` : ``}`}</option>)}
 								</select>
 							</div>
 						</div>
