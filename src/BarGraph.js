@@ -2,8 +2,6 @@ import React from 'react';
 import { ComposedChart, Bar, XAxis, YAxis, Tooltip } from 'recharts';
 import Graph from './Graph';
 
-var BAR_SIZE = 30;
-
 function getFont() {
 	const div = document.querySelector('body');
 	const style = window.getComputedStyle(div);
@@ -54,7 +52,7 @@ class BarGraph extends Graph {
 				maxWidth = tmpWidth;
 			}
 		}
-		var height = (BAR_SIZE + 1) * this.state.data.length;
+		var height = 68 + 25 * this.state.data.length;
 		return (
 			<div id="bar-graph" ref={this.myRef} style={{width: this.state.width, height: height}}>
 				<ComposedChart layout="vertical" width={this.state.pixelWidth} height={height} data={this.state.data} margin={{top: 20, right: 20, bottom: 20, left: 20}}>
