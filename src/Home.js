@@ -30,7 +30,7 @@ export default class Home extends Component {
 	refreshData() {
 		if (this.state.devices[this.state.device]) {
 			const options = { device: this.state.devices[this.state.device].id_devices, start: 0, end: Math.floor(Date.now() / 1000) };
-			GraphData.get('total', options).then(data => {
+			GraphData.get('total', options, true).then(data => {
 				this.setState({ total: data });			
 				GraphData.get('heatmap', options).then(data => {
 					this.setState({ heatmap: data });
@@ -71,7 +71,7 @@ export default class Home extends Component {
 						<div className="card-body">
 							<div className="form-group">
 								<select onChange={this.selectDevice} className="form-control" id="selectDevice" value={this.state.device}>
-									{this.state.devices.map(e => <option value={e.id_devices} key={`${e.id_devices}/${e.id_collections}`}>{`${e.devices_name}${e.collections_name ? ` (${e.collections_name})` : ``}`}</option>)}
+									{this.state.devices.map((e, i) => <option value={i} key={i}>{`${e.devices_name}${e.collections_name ? ` (${e.collections_name})` : ``}`}</option>)}
 								</select>
 							</div>
 						</div>

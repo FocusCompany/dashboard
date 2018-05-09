@@ -130,9 +130,9 @@ export default class graphData {
 	}
 
 	// Fecthes() then converts to type
-	static get(type, options) {
+	static get(type, options, reload) {
 		return new Promise((resolve, reject) => {
-			if (!this.data) {
+			if (!this.data || reload) {
 				this.fetch(options).then(data => {
 					this.data = data;
 					if (processor[type]) {
