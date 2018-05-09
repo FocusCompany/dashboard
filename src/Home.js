@@ -71,7 +71,7 @@ export default class Home extends Component {
 						<div className="card-body">
 							<div className="form-group">
 								<select onChange={this.selectDevice} className="form-control" id="selectDevice" value={this.state.device}>
-									{this.state.devices.map(e => <option value={e.id_devices} key={`${e.id_devices}/${e.id_collections}`}>{`${e.devices_name} (${e.collections_name})`}</option>)}
+									{this.state.devices.map(e => <option value={e.id_devices} key={`${e.id_devices}/${e.id_collections}`}>{`${e.devices_name} (${e.collections_name || 'NONE'})`}</option>)}
 								</select>
 							</div>
 						</div>
