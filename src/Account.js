@@ -109,7 +109,7 @@ export default class Account extends Component {
 		return (
 		<div className="container">
 			<div className="row justify-content-md-center">
-				<div className="col-5">
+				<div className="col-12 col-mb-5">
 					<div className="card bg-light mb-3">
 						<div className="card-header">Account Information</div>
 						<div className="card-body">
@@ -138,7 +138,7 @@ export default class Account extends Component {
 				</div>
 			</div>
 			<div className="row justify-content-md-center">
-				<div className="col-5">
+				<div className="col-12 col-mb-5">
 					<div className="card bg-light mb-3">
 						<div className="card-header">Devices</div>
 						<div className="card-body">

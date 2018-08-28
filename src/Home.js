@@ -10,6 +10,41 @@ import CalendarHeatmapGraph from './CalendarHeatmapGraph';
 
 import GraphData from './GraphData';
 
+/* Dummy data
+let DATA = [
+	{process: 'chrome', length: 1200},
+	{process: 'word', length: 600},
+	{process: 'visual studio code', length: 1400},
+	{process: 'skype', length: 800}
+]
+
+let SUMMARY = [
+	{name: "Activity", value: 80, percent: 80},
+	{name: "Idle", value: 20, percent: 20}
+]
+
+let HEATMAP = [
+	{
+		date: "2018-08-11",
+		details: [{name: 'word', date: "2018-08-11 12:34:56", value: 10000}],
+		summary: [{name: 'word', value: 10000}],
+		total: 10000
+	},
+	{
+		date: "2018-08-12",
+		details: [{name: 'chrome', date: "2018-08-12 13:55:22", value: 25000}, {name: 'visual studio code', date: "2018-08-12 13:42:42", value: 30000}],
+		summary: [{name: 'chrome', value: 25000}, {name: 'visual studio code', value: 30000}],
+		total: 55000
+	},
+	{
+		date: "2018-08-13",
+		details: [{name: 'chrome', date: "2018-08-13 10:18:11", value: 15000}, {name: 'chrome', date: "2018-08-13 18:05:11", value: 10000}, {name: 'visual studio code', date: "2018-08-13 18:06:42", value: 12000}, {name: 'skype', date: "2018-08-13 17:06:32", value: 8000}],
+		summary: [{name: 'chrome', value: 30000}, {name: 'visual studio code', value: 12000}, {name: 'skype', value: 8000}],
+		total: 50000
+	}
+]
+*/
+
 export default class Home extends Component {
 	constructor(props) {
 		super(props);
@@ -70,6 +105,7 @@ export default class Home extends Component {
 			<div className="row justify-content-md-center">			
 				<div className="col-12">
 					<div className="card bg-light mb-3">
+					<div className="card-header">Device</div>
 						<div className="card-body">
 							<div className="form-group">
 								<select onChange={this.selectDevice} className="form-control" id="selectDevice" value={this.state.device}>
