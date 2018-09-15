@@ -8,6 +8,8 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+import GroupWorkIcon from '@material-ui/icons/GroupWork';
+
 import { callRenewAPI, Toast } from '../../utils';
 
 import List from '@material-ui/core/List';
@@ -85,6 +87,8 @@ class Devices extends Component {
         editor: false,
         ed_delete: false,
         collections: [],
+
+        groupDelete: false,
     }
 
     refresh = () => {
@@ -150,6 +154,22 @@ class Devices extends Component {
         this.closeEditor();
     }
 
+    
+
+    closeGroupDelete = () => {
+        this.setState({ groupDelete: false });
+        this.refresh();
+    }
+
+    deleteGroup = async (group) => {
+        if (group) {
+            this.setState({ groupDelete: true, group });
+        } else {
+            await callRenewAPI('/delete_group', { collections_name: group }, 'DELETE', null, true);
+        }
+        this.closeGroupDelete();
+    }
+
     handleCheckChange = name => event => {
         this.setState({ [name]: event.target.checked });
     };
@@ -168,26 +188,54 @@ class Devices extends Component {
                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                             <Typography className={classes.heading}>Devices</Typography>
                         </ExpansionPanelSummary>
-                        <ExpansionPanelDetails className={classes.list}>
-                            <List component="nav">
-                            {this.state.devices ? this.state.devices.map(device => {
-                                const groups = device.collections.length ? 'Groups: ' + device.collections.map(c => c.collections_name) : '';
-                                return (
-                                    <ListItem button onClick={() => this.editDevice(device.id_devices)}
-                                        className={classes.listItem} key={device.id_devices}
-                                    >
-                                        <Avatar>
-                                            <PermDeviceIformationIcon />
-                                        </Avatar>
-                                        <ListItemText primary={device.devices_name} secondary={`${groups}`} />
-                                    </ListItem>
-                                );
-                            }) : null }
+                        <ExpansionPanelDetails>
+                            <List component="nav" className={classes.list}>
+                                <Grid container spacing={24}>
+                                    {this.state.devices ? this.state.devices.map(d => {
+                                        const groups = d.collections.length ? 'Groups: ' + d.collections.map(c => c.collections_name) : '';
+                                        return (
+                                            <Grid xs={12} sm={6}  md={4} lg={3} xl={2}>
+                                                <ListItem button onClick={() => this.editDevice(d.id_devices)}
+                                                    className={classes.listItem} key={d.id_devices}
+                                                >
+                                                    <Avatar>
+                                                        <PermDeviceIformationIcon />
+                                                    </Avatar>
+                                                    <ListItemText primary={d.devices_name} secondary={`${groups}`} />
+                                                </ListItem>
+                                            </Grid>
+                                        );
+                                    }) : null }
+                                </Grid>
                             </List>
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
 
-
+                    <ExpansionPanel defaultExpanded>
+                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                            <Typography className={classes.heading}>Groups</Typography>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                            <List component="nav" className={classes.list}>
+                                <Grid container spacing={24}>
+                                    {this.state.collections ? this.state.collections.map(c => {
+                                        return (
+                                            <Grid xs={12} sm={6} md={4} lg={3} xl={2}>
+                                                <ListItem button onClick={() => this.deleteGroup(c.id_collections)}
+                                                    className={classes.listItem} key={c.id_collections}
+                                                >
+                                                    <Avatar>
+                                                        <GroupWorkIcon />
+                                                    </Avatar>
+                                                    <ListItemText primary={c.collections_name} />
+                                                </ListItem>
+                                            </Grid>
+                                        );
+                                    }) : null }
+                                </Grid>
+                            </List>
+                        </ExpansionPanelDetails>
+                    </ExpansionPanel>
 
                     <Dialog
                         fullScreen={fullScreen}
@@ -249,6 +297,28 @@ class Devices extends Component {
                             </Button>
                             <Button onClick={this.saveEditor} variant="contained" color="primary" autoFocus>
                                 Save
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+
+                    <Dialog
+                        fullScreen={fullScreen}
+                        open={this.state.groupDelete}
+                        onClose={this.closeGroupDelete}
+                        aria-labelledby="responsive-dialog-title"
+                    >
+                        <DialogTitle id="responsive-dialog-title">{`Group Delete - ${this.state.group}`}</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                Delete group {this.state.group} ?
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={this.closeGroupDelete} color="secondary">
+                                Discard
+                            </Button>
+                            <Button onClick={this.deleteGroup} variant="contained" color="secondary" autoFocus>
+                                Delete
                             </Button>
                         </DialogActions>
                     </Dialog>
