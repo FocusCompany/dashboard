@@ -54,8 +54,8 @@ class Stats extends Component {
     componentDidMount() {
 		callRenewAPI('/get_devices', null, 'GET', null, true)
 		.then(res => {
-			this.setState({devices: res.devices, device: res.devices[0].id_devices});
-			this.refreshData();
+			this.setState({devices: res.devices});
+			this.refreshData(res.devices[0].id_devices);
 		})
 		.catch(err => {
 			console.log(err);
@@ -63,20 +63,19 @@ class Stats extends Component {
 		});
     }
     
-    refreshData = () => {
-        const options = { device: this.state.device, start: 0, end: Math.floor(Date.now() / 1000) };
+    refreshData = (device) => {
+        const options = { device, start: 0, end: Math.floor(Date.now() / 1000) };
         GraphData.get('total', options, true).then(t_data => {
             GraphData.get('heatmap', options).then(h_data => {
                 GraphData.get('summary', options).then(s_data => {
-                    this.setState({ summary: s_data, heatmap: h_data, total: t_data });
+                    this.setState({ summary: s_data, heatmap: h_data, total: t_data, device });
                 });
             });
         });
     }
 
     handleChange = event => {
-        this.setState({ [event.target.name]: event.target.value });
-        this.refreshData();
+        this.refreshData(event.target.value);
     };
 
     render() {
@@ -96,7 +95,7 @@ class Stats extends Component {
                         }}
                     >
                     { this.state.devices.map(d =>
-                        <MenuItem value={d.id_devices}>{d.devices_name}</MenuItem>
+                        <MenuItem value={d.id_devices}>{`${d.devices_name} [${d.id_devices}]`}</MenuItem>
                     )}
                     </Select>
                 </FormControl>
