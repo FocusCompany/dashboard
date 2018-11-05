@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Storyshots Graphs BarGraph 1`] = `
+<div
+  id="bar-graph"
+  style={
+    Object {
+      "height": 168,
+      "width": "100%",
+    }
+  }
+/>
+`;
+
+exports[`Storyshots Graphs ColumnGraph 1`] = `
+<div
+  style={
+    Object {
+      "height": "300px",
+      "width": "100%",
+    }
+  }
+/>
+`;
+
+exports[`Storyshots Graphs HalfPieGraph 1`] = `
+<div
+  style={
+    Object {
+      "height": "300px",
+      "width": "100%",
+    }
+  }
+/>
+`;
+
+exports[`Storyshots Graphs PieGraph 1`] = `
+<div
+  style={
+    Object {
+      "height": "300px",
+      "width": "100%",
+    }
+  }
+/>
+`;

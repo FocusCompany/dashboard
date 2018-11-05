@@ -15,6 +15,9 @@ function getFont() {
 function getTextWidth(text) {
   var canvas = document.createElement("canvas");
   const context = canvas.getContext("2d");
+  if (!context) {
+    return 0;
+  }
   context.font = getFont();
   const metric = context.measureText(text);
   return Math.ceil(metric.width * 1.1); // measureText method's return value may be slightly underestimated, add some pixels or scale it
