@@ -1,23 +1,26 @@
 import React from "react";
 
 import { storiesOf } from "@storybook/react";
-import { action } from "@storybook/addon-actions";
-import { linkTo } from "@storybook/addon-links";
 
-import { Button, Welcome } from "@storybook/react/demo";
+import BarGraph from "../routes/Dashboard/Graphs/BarGraph";
+import ColumnGraph from "../routes/Dashboard/Graphs/ColumnGraph";
+import HalfPieGraph from "../routes/Dashboard/Graphs/HalfPieGraph";
+import PieGraph from "../routes/Dashboard/Graphs/PieGraph";
 
-storiesOf("Welcome", module).add("to Storybook", () => (
-  <Welcome showApp={linkTo("Button")} />
-));
+let DATA = [
+  { process: "chrome", length: 1200 },
+  { process: "word", length: 600 },
+  { process: "visual studio code", length: 1400 },
+  { process: "skype", length: 800 }
+];
 
-storiesOf("Button", module)
-  .add("with text", () => (
-    <Button onClick={action("clicked")}>Hello Button</Button>
-  ))
-  .add("with some emoji", () => (
-    <Button onClick={action("clicked")}>
-      <span role="img" aria-label="so cool">
-        😀 😎 👍 💯
-      </span>
-    </Button>
-  ));
+let SUMMARY = [
+  { name: "Activity", value: 80, percent: 80 },
+  { name: "Idle", value: 20, percent: 20 }
+];
+
+storiesOf("Graphs", module)
+  .add("BarGraph", () => <BarGraph data={DATA} height="300px" />)
+  .add("ColumnGraph", () => <ColumnGraph data={DATA} height="300px" />)
+  .add("HalfPieGraph", () => <HalfPieGraph data={SUMMARY} height="300px" />)
+  .add("PieGraph", () => <PieGraph data={DATA} height="300px" />);
