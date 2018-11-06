@@ -24,11 +24,13 @@ import ListItemText from "@material-ui/core/ListItemText";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import DevicesIcon from "@material-ui/icons/Devices";
+import FilterListIcon from "@material-ui/icons/FilterList";
 
 import { callRenewAPI, Toast } from "../../utils";
 import AccountRoute from "./Account";
 import StatsRoute from "./Stats";
 import DevicesRoute from "./Devices";
+import FiltersRoute from "./Filters";
 
 const drawerWidth = 240;
 
@@ -39,6 +41,7 @@ const strings = new LocalizedStrings({
     dashboard: "Dashboard",
     devices: "Devices",
     account: "Account",
+    filters: "Filters",
     signOutButton: "Sign out"
   },
   fr: {
@@ -47,6 +50,7 @@ const strings = new LocalizedStrings({
     dashboard: "Tableau de bord",
     devices: "Appareils",
     account: "Compte",
+    filters: "Filtres",
     signOutButton: "Se déconnecter"
   }
 });
@@ -205,6 +209,12 @@ class Dashboard extends Component {
               </ListItemIcon>
               <ListItemText primary={strings.account} />
             </ListItem>
+            <ListItem button component={Link} to="/filters">
+              <ListItemIcon>
+                <FilterListIcon />
+              </ListItemIcon>
+              <ListItemText primary={strings.filters} />
+            </ListItem>
           </List>
         </Drawer>
       </ClickAwayListener>
@@ -259,6 +269,7 @@ class Dashboard extends Component {
                 path="/account"
                 render={() => <AccountRoute logOut={this.logOut} />}
               />
+              <Route path="/filters" component={FiltersRoute} />
             </main>
           </div>
         </div>

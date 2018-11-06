@@ -136,24 +136,24 @@ export default class graphData {
           .then(data => {
             this.data = data;
             if (processor[type]) {
-              resolve(processor[type](data));
+              return resolve(processor[type](data));
             } else {
-              reject("Unknown data type");
+              return reject("Unknown data type");
             }
           })
           .catch(err => {
             Toast.warning(`Could not fetch data for ${type}, using stub`);
             if (processor[type]) {
-              resolve(processor[type](stubData));
+              return resolve(processor[type](stubData));
             } else {
-              reject("Unknown data type");
+              return reject("Unknown data type");
             }
           });
       } else {
         if (processor[type]) {
-          resolve(processor[type](this.data));
+          return resolve(processor[type](this.data));
         } else {
-          reject("Unknown data type");
+          return reject("Unknown data type");
         }
       }
     });
