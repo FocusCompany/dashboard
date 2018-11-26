@@ -99,12 +99,15 @@ class Stats extends Component {
     GraphData.get("total", options, true).then(t_data => {
       GraphData.get("heatmap", options).then(h_data => {
         GraphData.get("summary", options).then(s_data => {
-          this.setState({
-            summary: s_data,
-            heatmap: h_data,
-            total: t_data,
-            device
-          });
+          this.setState(
+            {
+              summary: s_data,
+              heatmap: h_data,
+              total: t_data,
+              device
+            },
+            () => this.forceUpdate()
+          );
         });
       });
     });
