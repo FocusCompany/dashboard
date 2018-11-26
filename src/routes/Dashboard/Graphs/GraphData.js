@@ -121,7 +121,7 @@ export default class graphData {
   static fetch(options) {
     return $.ajax({
       type: "POST",
-      url: "http://backend.thefocuscompany.me:1234/process",
+      url: "http://backend.thefocuscompany.me:8080/windows",
       crossDomain: true,
       data: options,
       dataType: "json"
@@ -142,7 +142,7 @@ export default class graphData {
             }
           })
           .catch(err => {
-            Toast.warning(`Could not fetch data for ${type}, using stub`);
+            Toast.warn(`Could not fetch data for ${type}, using stub`);
             if (processor[type]) {
               return resolve(processor[type](stubData));
             } else {

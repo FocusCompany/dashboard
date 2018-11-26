@@ -82,7 +82,10 @@ class Stats extends Component {
   componentDidMount() {
     callRenewAPI("/get_devices", null, "GET", null, true)
       .then(res => {
-        this.setState({ devices: res.devices });
+        this.setState({
+          devices: res.devices,
+          device: res.devices[0].id_devices
+        });
         this.refreshData(res.devices[0].id_devices);
       })
       .catch(err => {

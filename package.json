@@ -22,7 +22,7 @@
     "build": "react-scripts build",
     "test": "jest --no-watchman",
     "eject": "react-scripts eject",
-    "prettier": "prettier --ignore-path ./.gitignore --write src/**/{.,*}.{js,css} *.{md,json} .storybook/** jest.transform.js",
+    "prettier": "prettier --ignore-path ./.gitignore --write 'src/**/{.,*}.{js,css}' *.{md,json} '.storybook/**' jest.transform.js",
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public"
   },

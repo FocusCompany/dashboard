@@ -156,7 +156,7 @@ class Devices extends Component {
     if (this.state.ed_delete) {
       callRenewAPI(
         "/delete_device",
-        { device_id: this.state.device.id_devices, keep_data: true },
+        { device_id: `${this.state.device.id_devices}`, keep_data: "false" },
         "DELETE",
         null,
         true
