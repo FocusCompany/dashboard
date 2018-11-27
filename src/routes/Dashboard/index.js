@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import LocalizedStrings from "localized-strings";
 
 import classNames from "classnames";
@@ -24,11 +24,13 @@ import ListItemText from "@material-ui/core/ListItemText";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import DevicesIcon from "@material-ui/icons/Devices";
+import FilterListIcon from "@material-ui/icons/FilterList";
 
 import { callRenewAPI, Toast } from "../../utils";
 import AccountRoute from "./Account";
 import StatsRoute from "./Stats";
 import DevicesRoute from "./Devices";
+import FiltersRoute from "./Filters";
 
 const drawerWidth = 240;
 
@@ -39,6 +41,7 @@ const strings = new LocalizedStrings({
     dashboard: "Dashboard",
     devices: "Devices",
     account: "Account",
+    filters: "Filters",
     signOutButton: "Sign out"
   },
   fr: {
@@ -47,6 +50,7 @@ const strings = new LocalizedStrings({
     dashboard: "Tableau de bord",
     devices: "Appareils",
     account: "Compte",
+    filters: "Filtres",
     signOutButton: "Se déconnecter"
   }
 });
@@ -187,23 +191,49 @@ class Dashboard extends Component {
           </div>
           <Divider />
           <List component="nav">
-            <ListItem button component={Link} to="/">
+            <ListItem
+              button
+              component={Link}
+              to="/"
+              onClick={this.handleDrawerClose}
+            >
               <ListItemIcon>
                 <DashboardIcon />
               </ListItemIcon>
               <ListItemText primary={strings.dashboard} />
             </ListItem>
-            <ListItem button component={Link} to="/devices">
+            <ListItem
+              button
+              component={Link}
+              to="/devices"
+              onClick={this.handleDrawerClose}
+            >
               <ListItemIcon>
                 <DevicesIcon />
               </ListItemIcon>
               <ListItemText primary={strings.devices} />
             </ListItem>
-            <ListItem button component={Link} to="/account">
+            <ListItem
+              button
+              component={Link}
+              to="/account"
+              onClick={this.handleDrawerClose}
+            >
               <ListItemIcon>
                 <AccountBoxIcon />
               </ListItemIcon>
               <ListItemText primary={strings.account} />
+            </ListItem>
+            <ListItem
+              button
+              component={Link}
+              to="/filters"
+              onClick={this.handleDrawerClose}
+            >
+              <ListItemIcon>
+                <FilterListIcon />
+              </ListItemIcon>
+              <ListItemText primary={strings.filters} />
             </ListItem>
           </List>
         </Drawer>
@@ -212,56 +242,70 @@ class Dashboard extends Component {
 
     return (
       <Router>
-        <div className={classes.root}>
-          <div className={classes.appFrame}>
-            <AppBar
-              className={classNames(classes.appBar, {
-                [classes.appBarShift]: open,
-                [classes[`appBarShift-left`]]: open
-              })}
-            >
-              <Toolbar>
-                <IconButton
-                  color="inherit"
-                  aria-label="Open drawer"
-                  onClick={this.handleDrawerOpen}
-                  className={classNames(
-                    classes.menuButton,
-                    open && classes.hide
-                  )}
-                >
-                  <MenuIcon />
-                </IconButton>
-                <Typography
-                  variant="title"
-                  color="inherit"
-                  noWrap
-                  className={classes.grow}
-                >
-                  Focus
-                </Typography>
-                <Button color="inherit" onClick={this.logOut}>
-                  {strings.signOutButton}
-                </Button>
-              </Toolbar>
-            </AppBar>
-            {drawer}
-            <main
-              className={classNames(classes.content, classes[`content-left`], {
-                [classes.contentShift]: open,
-                [classes[`contentShift-left`]]: open
-              })}
-            >
-              <div className={classes.drawerHeader} />
-              <Route exact path="/" component={StatsRoute} />
-              <Route path="/devices" component={DevicesRoute} />
-              <Route
-                path="/account"
-                render={() => <AccountRoute logOut={this.logOut} />}
-              />
-            </main>
-          </div>
-        </div>
+        <Switch>
+          <Route path="/graph" component={StatsRoute} />
+
+          <Route
+            path="/"
+            render={() => (
+              <div className={classes.root}>
+                <div className={classes.appFrame}>
+                  <AppBar
+                    className={classNames(classes.appBar, {
+                      [classes.appBarShift]: open,
+                      [classes[`appBarShift-left`]]: open
+                    })}
+                  >
+                    <Toolbar>
+                      <IconButton
+                        color="inherit"
+                        aria-label="Open drawer"
+                        onClick={this.handleDrawerOpen}
+                        className={classNames(
+                          classes.menuButton,
+                          open && classes.hide
+                        )}
+                      >
+                        <MenuIcon />
+                      </IconButton>
+                      <Typography
+                        variant="title"
+                        color="inherit"
+                        noWrap
+                        className={classes.grow}
+                      >
+                        Focus
+                      </Typography>
+                      <Button color="inherit" onClick={this.logOut}>
+                        {strings.signOutButton}
+                      </Button>
+                    </Toolbar>
+                  </AppBar>
+                  {drawer}
+                  <main
+                    className={classNames(
+                      classes.content,
+                      classes[`content-left`],
+                      {
+                        [classes.contentShift]: open,
+                        [classes[`contentShift-left`]]: open
+                      }
+                    )}
+                  >
+                    <div className={classes.drawerHeader} />
+                    <Route exact path="/" component={StatsRoute} />
+                    <Route path="/devices" component={DevicesRoute} />
+                    <Route
+                      path="/account"
+                      render={() => <AccountRoute logOut={this.logOut} />}
+                    />
+                    <Route path="/filters" component={FiltersRoute} />
+                  </main>
+                </div>
+              </div>
+            )}
+          />
+        </Switch>
       </Router>
     );
   }

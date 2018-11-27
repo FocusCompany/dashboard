@@ -10,9 +10,11 @@
     "localized-strings": "^0.2.0",
     "moment": "^2.22.2",
     "react": "^16.5.0",
+    "react-bootstrap": "^0.32.4",
     "react-dom": "^16.5.0",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.5",
+    "react-select": "^2.1.1",
     "reactjs-calendar-heatmap": "^0.0.10",
     "recharts": "^1.2.0"
   },
@@ -21,7 +23,7 @@
     "build": "react-scripts build",
     "test": "jest --no-watchman",
     "eject": "react-scripts eject",
-    "prettier": "prettier --ignore-path ./.gitignore --write src/**/{.,*}.{js,css} *.{md,json} .storybook/** jest.transform.js",
+    "prettier": "prettier --ignore-path ./.gitignore --write 'src/**/{.,*}.{js,css}' *.{md,json} '.storybook/**' jest.transform.js",
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public"
   },

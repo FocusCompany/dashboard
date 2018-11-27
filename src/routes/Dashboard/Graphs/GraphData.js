@@ -1,5 +1,5 @@
-import $ from "jquery";
 import { Toast } from "../../../utils";
+import $ from "jquery";
 
 const stubData = [
   {
@@ -39,7 +39,7 @@ function getTime(d) {
 function makeHeatmapData(data) {
   let global = [];
   data.forEach(e => {
-    const date = new Date(e.start * 1000);
+    const date = new Date(e.start);
     const dateStr = getDate(date);
     const timeStr = getTime(date);
 
@@ -53,7 +53,7 @@ function makeHeatmapData(data) {
       global.push(item);
     }
     item.details.push({
-      name: e.idle ? "Idle" : e.process,
+      name: e.afk ? "Idle" : e.process,
       date: `${dateStr} ${timeStr}`,
       value: Math.abs(e.end - e.start)
     });
@@ -65,7 +65,7 @@ function makeHeatmapData(data) {
 function makeTotalData(data) {
   let total = [];
   data.forEach(e => {
-    if (!e.idle) {
+    if (!e.afk) {
       let item = total.find(
         i => i.process === (!e.process ? "Idle" : e.process)
       );
@@ -99,7 +99,7 @@ function makeActivitySummary(data) {
   let total = 0;
 
   data.forEach(e => {
-    sum[e.idle ? 1 : 0].value += Math.abs(e.end - e.start);
+    sum[e.afk ? 1 : 0].value += Math.abs(e.end - e.start);
     total += Math.abs(e.end - e.start);
   });
 
@@ -117,43 +117,52 @@ const processor = {
 
 export default class graphData {
   static data = null;
-  // Fetch from API
-  static fetch(options) {
-    return $.ajax({
-      type: "POST",
-      url: "http://backend.thefocuscompany.me:1234/process",
-      crossDomain: true,
-      data: options,
-      dataType: "json"
-    });
-  }
 
   // Fecthes() then converts to type
   static get(type, options, reload) {
     return new Promise((resolve, reject) => {
+      console.log(options);
       if (!this.data || reload) {
-        this.fetch(options)
+        console.log($.param(options));
+        fetch("http://backend.thefocuscompany.me:8080/window", {
+          method: "POST",
+          headers: {
+            Authorization: localStorage.getItem("token"),
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: $.param(options)
+        })
+          .then(data => data.json())
           .then(data => {
+            console.log(data);
+            if (!data) {
+              data = [];
+            }
+            data = data.map(d => {
+              d.start = new Date(d.start);
+              d.end = new Date(d.end);
+              return d;
+            });
             this.data = data;
             if (processor[type]) {
-              resolve(processor[type](data));
+              return resolve(processor[type](data));
             } else {
-              reject("Unknown data type");
+              return reject("Unknown data type");
             }
           })
           .catch(err => {
-            Toast.warning(`Could not fetch data for ${type}, using stub`);
+            Toast.warn(`Could not fetch data for ${type}, using stub`);
             if (processor[type]) {
-              resolve(processor[type](stubData));
+              return resolve(processor[type](stubData));
             } else {
-              reject("Unknown data type");
+              return reject("Unknown data type");
             }
           });
       } else {
         if (processor[type]) {
-          resolve(processor[type](this.data));
+          return resolve(processor[type](this.data));
         } else {
-          reject("Unknown data type");
+          return reject("Unknown data type");
         }
       }
     });

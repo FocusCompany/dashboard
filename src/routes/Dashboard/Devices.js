@@ -39,6 +39,7 @@ import Chip from "@material-ui/core/Chip";
 
 const strings = new LocalizedStrings({
   en: {
+    devices: "Devices",
     groups: "Groups",
     changeDescription:
       "Here you can change a device's groups or delete the device.",
@@ -49,6 +50,7 @@ const strings = new LocalizedStrings({
     delete: "Delete"
   },
   fr: {
+    devices: "Appareils",
     groups: "Groupes",
     changeDescription:
       "Ici vous pouvez changer le groupe d'un appareil ou supprimer l'appareil.",
@@ -156,7 +158,7 @@ class Devices extends Component {
     if (this.state.ed_delete) {
       callRenewAPI(
         "/delete_device",
-        { device_id: this.state.device.id_devices, keep_data: true },
+        { device_id: `${this.state.device.id_devices}`, keep_data: "false" },
         "DELETE",
         null,
         true
@@ -235,7 +237,9 @@ class Devices extends Component {
         <div className={classes.root}>
           <ExpansionPanel defaultExpanded>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography className={classes.heading}>Devices</Typography>
+              <Typography className={classes.heading}>
+                {strings.devices}
+              </Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               <List component="nav" className={classes.list}>
@@ -274,7 +278,9 @@ class Devices extends Component {
 
           <ExpansionPanel defaultExpanded>
             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography className={classes.heading}>Groups</Typography>
+              <Typography className={classes.heading}>
+                {strings.groups}
+              </Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               <List component="nav" className={classes.list}>
