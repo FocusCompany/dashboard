@@ -166,23 +166,23 @@ class Stats extends Component {
           devices: res.devices,
           device: res.devices[0].id_devices
         });
+        callRenewAPI("/list_group", null, "GET", null, true)
+          .then(res => {
+            this.setState({
+              collections: res.collections,
+              collection:
+                res.collections.length > 0
+                  ? res.collections[0].id_collections
+                  : null
+            });
+          })
+          .catch(err => {
+            Toast.error(strings.errorGroup);
+          });
       })
       .catch(err => {
         console.log(err);
         Toast.error(strings.error);
-      });
-    callRenewAPI("/list_group", null, "GET", null, true)
-      .then(res => {
-        this.setState({
-          collections: res.collections,
-          collection:
-            res.collections.length > 0
-              ? res.collections[0].id_collections
-              : null
-        });
-      })
-      .catch(err => {
-        Toast.error(strings.errorGroup);
       });
     this.refreshData({});
   }
