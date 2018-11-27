@@ -29,6 +29,7 @@ const strings = new LocalizedStrings({
   en: {
     reset: "Reset",
     error: "Could not get device list",
+    group: "Group",
     device: "Device",
     heatmap: "Heatmap",
     heatmapNoData: "No heatmap data",
@@ -42,6 +43,7 @@ const strings = new LocalizedStrings({
   fr: {
     reset: "Réinitialiser",
     error: "Impossible d'obtenir la liste des appareils",
+    group: "Groupe",
     device: "Appareil",
     heatmap: "Carte de Chaleur",
     heatmapNoData: "Aucune donnée de carte de chaleur",
@@ -117,6 +119,9 @@ class Stats extends Component {
   state = {
     date: moment().startOf("week"),
     category: "week",
+    subcategory: "all",
+    collections: [],
+    collection: 0,
     devices: [],
     device: 0,
 
@@ -129,29 +134,62 @@ class Stats extends Component {
   componentDidMount() {
     callRenewAPI("/get_devices", null, "GET", null, true)
       .then(res => {
+        console.log(res);
         this.setState({
           devices: res.devices,
           device: res.devices[0].id_devices
         });
-        this.refreshData(res.devices[0].id_devices);
       })
       .catch(err => {
         console.log(err);
         Toast.error(strings.error);
       });
+    callRenewAPI("/list_group", null, "GET", null, true)
+      .then(res => {
+        this.setState({
+          collections: res.collections,
+          collection:
+            res.collections.length > 0
+              ? res.collections[0].id_collections
+              : null
+        });
+      })
+      .catch(err => {
+        Toast.error("Could not get device list");
+      });
+    this.refreshData({});
   }
 
-  refreshData = device => {
+  refreshData = ({ device, collection }) => {
     const dateTmp = moment(this.state.date);
     let options = {};
-    if (this.state.category === "total") {
-      options = { device };
+    if (device) {
+      if (this.state.category === "total") {
+        options = { device };
+      } else {
+        options = {
+          device,
+          from: dateTmp.toISOString(),
+          to: dateTmp.add(1, this.state.category).toISOString()
+        };
+      }
+    } else if (collection) {
+      if (this.state.category === "total") {
+        options = { collection };
+      } else {
+        options = {
+          group: collection,
+          from: dateTmp.toISOString(),
+          to: dateTmp.add(1, this.state.category).toISOString()
+        };
+      }
     } else {
-      options = {
-        device,
-        from: dateTmp.toISOString(),
-        to: dateTmp.add(1, this.state.category).toISOString()
-      }; //Math.floor(Date.now() / 1000) };
+      if (this.state.category !== "total") {
+        options = {
+          from: dateTmp.toISOString(),
+          to: dateTmp.add(1, this.state.category).toISOString()
+        };
+      }
     }
     GraphData.get("total", options, true).then(t_data => {
       GraphData.get("heatmap", options).then(h_data => {
@@ -160,8 +198,7 @@ class Stats extends Component {
             {
               summary: s_data,
               heatmap: h_data,
-              total: t_data,
-              device
+              total: t_data
             },
             () => this.forceUpdate()
           );
@@ -171,14 +208,22 @@ class Stats extends Component {
   };
 
   handleChange = event => {
-    this.refreshData(event.target.value);
+    this.setState({ device: event.target.value }, () =>
+      this.refreshData({ device: event.target.value })
+    );
+  };
+
+  handleChangeGroup = event => {
+    this.setState({ collection: event.target.value }, () =>
+      this.refreshData({ collection: event.target.value })
+    );
   };
 
   handleSubstractDate = () => {
     if (this.state.category === "total") return;
     const dateTmp = moment(this.state.date);
     this.setState({ date: dateTmp.subtract(1, this.state.category) }, () =>
-      this.refreshData(this.state.device)
+      this.refreshData({ device: this.state.device })
     );
   };
 
@@ -186,21 +231,40 @@ class Stats extends Component {
     if (this.state.category === "total") return;
     const dateTmp = moment(this.state.date);
     this.setState({ date: dateTmp.add(1, this.state.category) }, () =>
-      this.refreshData(this.state.device)
+      this.refreshData({ device: this.state.device })
     );
   };
 
   handleResetDate = () => {
     if (this.state.category === "total") return;
     this.setState({ date: moment().startOf(this.state.category) }, () =>
-      this.refreshData(this.state.device)
+      this.refreshData({ device: this.state.device })
     );
   };
 
   handleChangeCategory = category => {
     this.setState({ category, date: moment().startOf(category) }, () =>
-      this.refreshData(this.state.device)
+      this.refreshData({ device: this.state.device })
     );
+  };
+
+  handleChangeSubCategory = subcategory => {
+    this.setState({ subcategory }, () => {
+      if (this.state.devices && this.state.devices.length > 0) {
+        if (subcategory === "all") {
+          this.refreshData({});
+        } else if (subcategory === "group") {
+          if (this.state.collection) {
+            this.refreshData({ collection: this.state.collection });
+          } else {
+            Toast.info("No group exists");
+            this.setState({ subcategory: "all" }, () => this.refreshData({}));
+          }
+        } else {
+          this.refreshData({ device: this.state.device });
+        }
+      }
+    });
   };
 
   render() {
@@ -224,6 +288,56 @@ class Stats extends Component {
         break;
       case "day":
         dateString = `${dateTmp.format("DD/MM/YYYY")}`;
+        break;
+    }
+
+    let subcategorySelect = null;
+    switch (this.state.subcategory) {
+      case "group":
+        subcategorySelect = (
+          <Grid item xs={12}>
+            <FormControl className={classes.formControl}>
+              <InputLabel htmlFor="age-simple">{strings.group}</InputLabel>
+              <Select
+                value={this.state.collection}
+                onChange={this.handleChangeGroup}
+                inputProps={{
+                  name: "group",
+                  id: "age-simple"
+                }}
+              >
+                {this.state.collections.map(d => (
+                  <MenuItem value={d.id_collections}>{`${d.collections_name} [${
+                    d.id_collections
+                  }]`}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+        );
+        break;
+      case "device":
+        subcategorySelect = (
+          <Grid item xs={12}>
+            <FormControl className={classes.formControl}>
+              <InputLabel htmlFor="age-simple">{strings.device}</InputLabel>
+              <Select
+                value={this.state.device}
+                onChange={this.handleChange}
+                inputProps={{
+                  name: "device",
+                  id: "age-simple"
+                }}
+              >
+                {this.state.devices.map(d => (
+                  <MenuItem value={d.id_devices}>{`${d.devices_name} [${
+                    d.id_devices
+                  }]`}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+        );
         break;
     }
 
@@ -303,24 +417,38 @@ class Stats extends Component {
           </Button>
         </Grid>
         <Grid item xs={12}>
-          <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="age-simple">{strings.device}</InputLabel>
-            <Select
-              value={this.state.device}
-              onChange={this.handleChange}
-              inputProps={{
-                name: "device",
-                id: "age-simple"
-              }}
+          <Pager className={classes.pager}>
+            <Pager.Item
+              className={`${classes.pagerItemLeft} ${
+                this.state.subcategory === "all" ? classes.pagerItemClicked : ""
+              }`}
+              onClick={() => this.handleChangeSubCategory("all")}
             >
-              {this.state.devices.map(d => (
-                <MenuItem value={d.id_devices}>{`${d.devices_name} [${
-                  d.id_devices
-                }]`}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+              All
+            </Pager.Item>
+            <Pager.Item
+              className={`${classes.pagerItem} ${
+                this.state.subcategory === "group"
+                  ? classes.pagerItemClicked
+                  : ""
+              }`}
+              onClick={() => this.handleChangeSubCategory("group")}
+            >
+              Group
+            </Pager.Item>
+            <Pager.Item
+              className={`${classes.pagerItem} ${
+                this.state.subcategory === "device"
+                  ? classes.pagerItemClicked
+                  : ""
+              }`}
+              onClick={() => this.handleChangeSubCategory("device")}
+            >
+              Device
+            </Pager.Item>
+          </Pager>
         </Grid>
+        {subcategorySelect}
         <Hidden mdDown>
           <Grid item xs={12}>
             <Paper className={classes.root} elevation={1}>
