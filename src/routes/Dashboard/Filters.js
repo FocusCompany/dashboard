@@ -3,9 +3,7 @@ import LocalizedStrings from "localized-strings";
 
 import { withStyles } from "@material-ui/core/styles";
 
-import { callRenewAPI, Toast } from "../../utils";
-
-import GraphData from "./Graphs/GraphData";
+import { Toast } from "../../utils";
 
 import Select from "react-select";
 
@@ -36,57 +34,28 @@ const styles = theme => ({
   }
 });
 
-function totalToOptions(total) {
-  const processes = [
-    ...new Set(
-      total.reduce(
-        (reducer, currentValue) =>
-          reducer.concat(
-            currentValue.reduce((reducer2, currentValue2) => {
-              let process = currentValue2.process
-                .replace(/\.[^/.]+$/, "")
-                .replace("-", " ");
-              process =
-                process[0].toUpperCase() + process.substr(1).toLowerCase();
-              reducer2.push(process);
-              return reducer2;
-            }, [])
-          ),
-        []
-      )
-    )
-  ];
-  return processes.map(process => ({ value: process, label: process }));
-}
-
-async function getDeviceTotal(device) {
-  const options = { device, start: 0, end: Math.floor(Date.now() / 1000) };
-  await new Promise(resolve => setTimeout(resolve, 600));
-  try {
-    return await GraphData.get("total", options, true);
-  } catch (err) {
-    return [];
-  }
-}
-
 class Filters extends Component {
   state = {
-    total: []
+    processes: []
   };
 
   async componentDidMount() {
-    callRenewAPI("/get_devices", null, "GET", null, true)
-      .then(async res => {
-        const total = await res.devices.reduce(
-          async (previousPromise, device) => {
-            const reducer = await previousPromise;
-            const newValue = await getDeviceTotal(device.id_devices);
-            reducer.push(newValue);
+    fetch("http://backend.thefocuscompany.me:8080/process/list", {
+      method: "POST",
+      headers: {
+        Authorization: localStorage.getItem("token"),
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    })
+      .then(data => data.json())
+      .then(data => {
+        this.setState({
+          processes: data.reduce((reducer, process) => {
+            if (process !== "")
+              reducer.push({ value: process, label: process });
             return reducer;
-          },
-          []
-        );
-        this.setState({ total });
+          }, [])
+        });
       })
       .catch(err => {
         Toast.error(strings.error);
@@ -100,7 +69,7 @@ class Filters extends Component {
         <Select
           onChange={value => console.log(value)}
           isMulti
-          options={totalToOptions(this.state.total)}
+          options={this.state.processes}
         />
       </div>
     );

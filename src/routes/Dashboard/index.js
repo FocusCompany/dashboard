@@ -277,7 +277,7 @@ class Dashboard extends Component {
                       >
                         <MenuIcon />
                       </IconButton>
-                      <img className={classes.logo} src={Logo} />
+                      <img className={classes.logo} src={Logo} alt="Focus" />
                       <Button
                         className={classes.signOutButton}
                         color="inherit"

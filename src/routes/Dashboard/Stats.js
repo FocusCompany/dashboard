@@ -328,6 +328,8 @@ class Stats extends Component {
       case "day":
         dateString = `${dateTmp.format("DD/MM/YYYY")}`;
         break;
+      default:
+        break;
     }
 
     let subcategorySelect = <div className={classes.pager} />;
@@ -373,6 +375,8 @@ class Stats extends Component {
             </Select>
           </FormControl>
         );
+        break;
+      default:
         break;
     }
 
