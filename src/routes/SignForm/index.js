@@ -7,6 +7,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import { callAPI, Toast } from "../../utils";
+import { Typography } from "@material-ui/core";
 
 const strings = new LocalizedStrings({
   en: {
@@ -18,7 +19,9 @@ const strings = new LocalizedStrings({
     firstName: "first_name",
     lastName: "last_name",
     email: "email",
-    password: "password"
+    password: "password",
+    reset:
+      "To reset your password, send an email to support@thefocuscompany.me."
   },
   fr: {
     loggingIn: "Connexion",
@@ -29,7 +32,9 @@ const strings = new LocalizedStrings({
     firstName: "prénom",
     lastName: "nom",
     email: "courriel",
-    password: "mot_de_passe"
+    password: "mot_de_passe",
+    reset:
+      "Pour réinitialiser votre mot de passe, envoyer un courriel à support@thefocuscompany.me."
   }
 });
 
@@ -42,6 +47,9 @@ const styles = theme => ({
     margin: theme.spacing.unit,
     width: 300,
     maxWidth: "90%"
+  },
+  reset: {
+    margin: "8px"
   }
 });
 
@@ -164,6 +172,9 @@ class SignForm extends Component {
               .replace("_", " ")
               .replace(/^\w/, c => c.toUpperCase())}
           </Button>
+          {this.state.mode === strings.signIn ? (
+            <Typography className={classes.reset}>{strings.reset}</Typography>
+          ) : null}
           <Button className={classes.button} onClick={this.changeMode}>
             {this.state.mode === strings.signUp
               ? strings.alreadyAccount

@@ -378,7 +378,7 @@ class Stats extends Component {
               Group
             </Pager.Item>
             <Pager.Item
-              className={`${classes.pagerItem} ${
+              className={`${classes.pagerItemRight} ${
                 this.state.subcategory === "device"
                   ? classes.pagerItemClicked
                   : ""
