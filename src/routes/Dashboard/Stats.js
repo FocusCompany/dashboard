@@ -29,8 +29,13 @@ const strings = new LocalizedStrings({
   en: {
     reset: "Reset",
     error: "Could not get device list",
+    all: "All",
     group: "Group",
     device: "Device",
+    year: "Year",
+    month: "Month",
+    week: "Week",
+    day: "Day",
     heatmap: "Heatmap",
     heatmapNoData: "No heatmap data",
     totalTimeSpent: "Total Time Spent",
@@ -43,8 +48,13 @@ const strings = new LocalizedStrings({
   fr: {
     reset: "Réinitialiser",
     error: "Impossible d'obtenir la liste des appareils",
+    all: "Tout",
     group: "Groupe",
     device: "Appareil",
+    year: "Année",
+    month: "Mois",
+    week: "Semaine",
+    day: "Jour",
     heatmap: "Carte de Chaleur",
     heatmapNoData: "Aucune donnée de carte de chaleur",
     totalTimeSpent: "Temps Total Passé",
@@ -372,7 +382,7 @@ class Stats extends Component {
               }`}
               onClick={() => this.handleChangeSubCategory("all")}
             >
-              All
+              {strings.all}
             </Pager.Item>
             <Pager.Item
               className={`${classes.pagerItem} ${
@@ -382,7 +392,7 @@ class Stats extends Component {
               }`}
               onClick={() => this.handleChangeSubCategory("group")}
             >
-              Group
+              {strings.group}
             </Pager.Item>
             <Pager.Item
               className={`${classes.pagerItemRight} ${
@@ -392,7 +402,7 @@ class Stats extends Component {
               }`}
               onClick={() => this.handleChangeSubCategory("device")}
             >
-              Device
+              {strings.device}
             </Pager.Item>
           </Pager>
           <Pager className={classes.pager}>
@@ -410,7 +420,7 @@ class Stats extends Component {
               }`}
               onClick={() => this.handleChangeCategory("year")}
             >
-              Year
+              {strings.year}
             </Pager.Item>
             <Pager.Item
               className={`${classes.pagerItem} ${
@@ -418,7 +428,7 @@ class Stats extends Component {
               }`}
               onClick={() => this.handleChangeCategory("month")}
             >
-              Month
+              {strings.month}
             </Pager.Item>
             <Pager.Item
               className={`${classes.pagerItem} ${
@@ -426,7 +436,7 @@ class Stats extends Component {
               }`}
               onClick={() => this.handleChangeCategory("week")}
             >
-              Week
+              {strings.week}
             </Pager.Item>
             <Pager.Item
               className={`${classes.pagerItemRight} ${
@@ -434,7 +444,7 @@ class Stats extends Component {
               }`}
               onClick={() => this.handleChangeCategory("day")}
             >
-              Day
+              {strings.day}
             </Pager.Item>
           </Pager>
         </Grid>
@@ -463,7 +473,7 @@ class Stats extends Component {
                 variant="contained"
                 onClick={this.handleResetDate}
               >
-                Reset
+                {strings.reset}
               </Button>
             </Pager>
           ) : null}
