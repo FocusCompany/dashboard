@@ -1,6 +1,7 @@
 import React from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip } from "recharts";
 import Graph from "./Graph";
+import { getTimeFromSeconds } from "../../../utils";
 
 function getFont() {
   const div = document.querySelector("body");
@@ -52,9 +53,15 @@ class ColumnGraph extends Graph {
             height={maxHeight}
             interval={0}
           />
-          <YAxis type="number" />
+          <YAxis
+            type="number"
+            tickFormatter={seconds => getTimeFromSeconds(seconds)}
+          />
           <Bar dataKey="length" fill="#8884d8" />
-          <Tooltip cursor={false} />
+          <Tooltip
+            cursor={false}
+            formatter={seconds => getTimeFromSeconds(seconds)}
+          />
         </BarChart>
       </div>
     );

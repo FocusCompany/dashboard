@@ -2,13 +2,16 @@ import React from "react";
 import { PieChart, Pie, Cell, Legend, Tooltip, LabelList } from "recharts";
 import PropTypes from "prop-types";
 import Graph from "./Graph";
+import { getTimeFromSeconds } from "../../../utils";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 class HalfPieGraph extends Graph {
   render() {
     var legend = this.props.legend ? <Legend align="center" /> : null;
-    var tooltip = this.props.tooltip ? <Tooltip /> : null;
+    var tooltip = this.props.tooltip ? (
+      <Tooltip formatter={seconds => getTimeFromSeconds(seconds)} />
+    ) : null;
     var label = this.props.label ? (
       <LabelList dataKey="percent" position="inside" fill="#ffffff" />
     ) : null;

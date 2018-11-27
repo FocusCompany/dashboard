@@ -40,6 +40,23 @@ export const Toast = {
 	})
 } */
 
+export function getTimeFromSeconds(sec_num) {
+  var hours = Math.floor(sec_num / 3600) % 24;
+  var minutes = Math.floor(sec_num / 60) % 60;
+  var seconds = Math.floor(sec_num) % 60;
+  let time = "";
+  if (hours > 0) {
+    time += `${hours}h `;
+  }
+  if (minutes > 0) {
+    time += `${minutes}m `;
+  }
+  if (time === "" || seconds > 0) {
+    time += `${seconds}s`;
+  }
+  return time;
+}
+
 export function callAPI(endpoint, data, method, extraHeaders, bearer) {
   // API Promise "Generator"
   if (bearer === true && extraHeaders !== null)

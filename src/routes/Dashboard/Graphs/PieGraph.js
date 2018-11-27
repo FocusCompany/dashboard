@@ -2,6 +2,7 @@ import React from "react";
 import { PieChart, Pie, Cell, Legend, Tooltip } from "recharts";
 import PropTypes from "prop-types";
 import Graph from "./Graph";
+import { getTimeFromSeconds } from "../../../utils";
 
 const COLORS = [
   "#e6194b",
@@ -33,7 +34,9 @@ class PieGraph extends Graph {
     var legend = this.props.legend ? (
       <Legend layout="vertical" align="right" verticalAlign="middle" />
     ) : null;
-    var tooltip = this.props.tooltip ? <Tooltip /> : null;
+    var tooltip = this.props.tooltip ? (
+      <Tooltip formatter={seconds => getTimeFromSeconds(seconds)} />
+    ) : null;
     return (
       <div
         ref={this.myRef}

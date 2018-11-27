@@ -1,6 +1,7 @@
 import React from "react";
 import { ComposedChart, Bar, XAxis, YAxis, Tooltip } from "recharts";
 import Graph from "./Graph";
+import { getTimeFromSeconds } from "../../../utils";
 
 function getFont() {
   const div = document.querySelector("body");
@@ -73,7 +74,10 @@ class BarGraph extends Graph {
           data={this.state.data}
           margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
         >
-          <XAxis type="number" />
+          <XAxis
+            type="number"
+            tickFormatter={seconds => getTimeFromSeconds(seconds)}
+          />
           <YAxis
             dataKey="process"
             type="category"
@@ -81,7 +85,10 @@ class BarGraph extends Graph {
             interval={0}
           />
           <Bar dataKey="length" fill="#8884d8" />
-          <Tooltip cursor={false} />
+          <Tooltip
+            cursor={false}
+            formatter={seconds => getTimeFromSeconds(seconds)}
+          />
         </ComposedChart>
       </div>
     );
