@@ -55,9 +55,9 @@ function makeHeatmapData(data) {
     item.details.push({
       name: e.afk ? "Idle" : e.process,
       date: `${dateStr} ${timeStr}`,
-      value: Math.abs(e.end - e.start)
+      value: Math.abs((e.end - e.start) / 1000)
     });
-    item.total += Math.abs(e.end - e.start);
+    item.total += Math.abs((e.end - e.start) / 1000);
   });
   return global;
 }
@@ -76,7 +76,7 @@ function makeTotalData(data) {
         };
         total.push(item);
       }
-      item.length += Math.abs(e.end - e.start);
+      item.length += Math.abs((e.end - e.start) / 1000);
     }
   });
   return total;
@@ -99,8 +99,8 @@ function makeActivitySummary(data) {
   let total = 0;
 
   data.forEach(e => {
-    sum[e.afk ? 1 : 0].value += Math.abs(e.end - e.start);
-    total += Math.abs(e.end - e.start);
+    sum[e.afk ? 1 : 0].value += Math.abs((e.end - e.start) / 1000);
+    total += Math.abs((e.end - e.start) / 1000);
   });
 
   sum.forEach(e => {
