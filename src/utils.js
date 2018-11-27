@@ -1,23 +1,23 @@
-//import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 //import 'react-toastify/dist/ReactToastify.css';
 import $ from "jquery";
 
 const APIRoot = "http://auth.thefocuscompany.me:3000/api/v1";
 
-export const Toast = {
+/*export const Toast = {
   error: text => console.error(text),
   info: text => console.info(text),
   warn: text => console.warn(text),
   success: text => console.log(text)
+};*/
+
+export const Toast = {
+  error: text => toast.error(text),
+  info: text => toast.info(text),
+  success: text => toast.success(text),
+  warning: text => toast.warn(text)
 };
 
-/* export const Toast = {
-	error: (text) => toast.error(text),
-	info: (text) => toast.info(text),
-	success: (text) => toast.success(text),
-	warning: (text) => toast.warn(text)
-}
- */
 /* const Toast = {
 	error: (text, title) => toast({
 		heading: title || 'Error',

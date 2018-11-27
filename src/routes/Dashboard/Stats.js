@@ -61,20 +61,31 @@ const styles = theme => ({
     ...theme.mixins.gutters(),
     paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 2,
-    margin: theme.spacing.unit
+    margin: theme.spacing.unit,
+    fontFamily: "Roboto"
   },
   formControl: {
     margin: theme.spacing.unit,
     paddingRight: theme.spacing.unit * 2,
     minWidth: 120,
-    width: "100%"
+    width: "100%",
+    flex: "1 1 50%"
+  },
+  row: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  topGraph: {
+    marginTop: "16px"
   },
   pager: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    padding: 0
+    padding: 0,
+    flex: "1 1 50%"
   },
   pagerItem: {
     display: "block",
@@ -82,7 +93,8 @@ const styles = theme => ({
     paddingTop: "8px",
     paddingBottom: "8px",
     backgroundColor: "#E6E6E6",
-    marginLeft: "-1px"
+    marginLeft: "-1px",
+    fontFamily: "Roboto"
   },
   pagerItemLeft: {
     display: "block",
@@ -108,7 +120,7 @@ const styles = theme => ({
   },
   resetButton: {
     display: "block",
-    margin: "auto"
+    marginLeft: "24px"
   },
   selectEmpty: {
     marginTop: theme.spacing.unit * 2
@@ -207,6 +219,23 @@ class Stats extends Component {
     });
   };
 
+  handleRefreshData = () => {
+    if (this.state.devices && this.state.devices.length > 0) {
+      if (this.state.subcategory === "all") {
+        this.refreshData({});
+      } else if (this.state.subcategory === "group") {
+        if (this.state.collection) {
+          this.refreshData({ collection: this.state.collection });
+        } else {
+          Toast.info("No group exists");
+          this.setState({ subcategory: "all" }, () => this.refreshData({}));
+        }
+      } else {
+        this.refreshData({ device: this.state.device });
+      }
+    }
+  };
+
   handleChange = event => {
     this.setState({ device: event.target.value }, () =>
       this.refreshData({ device: event.target.value })
@@ -222,49 +251,38 @@ class Stats extends Component {
   handleSubstractDate = () => {
     if (this.state.category === "total") return;
     const dateTmp = moment(this.state.date);
-    this.setState({ date: dateTmp.subtract(1, this.state.category) }, () =>
-      this.refreshData({ device: this.state.device })
+    this.setState(
+      { date: dateTmp.subtract(1, this.state.category) },
+      this.handleRefreshData
     );
   };
 
   handleAddDate = () => {
     if (this.state.category === "total") return;
     const dateTmp = moment(this.state.date);
-    this.setState({ date: dateTmp.add(1, this.state.category) }, () =>
-      this.refreshData({ device: this.state.device })
+    this.setState(
+      { date: dateTmp.add(1, this.state.category) },
+      this.handleRefreshData
     );
   };
 
   handleResetDate = () => {
     if (this.state.category === "total") return;
-    this.setState({ date: moment().startOf(this.state.category) }, () =>
-      this.refreshData({ device: this.state.device })
+    this.setState(
+      { date: moment().startOf(this.state.category) },
+      this.handleRefreshData
     );
   };
 
   handleChangeCategory = category => {
-    this.setState({ category, date: moment().startOf(category) }, () =>
-      this.refreshData({ device: this.state.device })
+    this.setState(
+      { category, date: moment().startOf(category) },
+      this.handleRefreshData
     );
   };
 
   handleChangeSubCategory = subcategory => {
-    this.setState({ subcategory }, () => {
-      if (this.state.devices && this.state.devices.length > 0) {
-        if (subcategory === "all") {
-          this.refreshData({});
-        } else if (subcategory === "group") {
-          if (this.state.collection) {
-            this.refreshData({ collection: this.state.collection });
-          } else {
-            Toast.info("No group exists");
-            this.setState({ subcategory: "all" }, () => this.refreshData({}));
-          }
-        } else {
-          this.refreshData({ device: this.state.device });
-        }
-      }
-    });
+    this.setState({ subcategory }, this.handleRefreshData);
   };
 
   render() {
@@ -291,59 +309,85 @@ class Stats extends Component {
         break;
     }
 
-    let subcategorySelect = null;
+    let subcategorySelect = <div className={classes.pager} />;
     switch (this.state.subcategory) {
       case "group":
         subcategorySelect = (
-          <Grid item xs={12}>
-            <FormControl className={classes.formControl}>
-              <InputLabel htmlFor="age-simple">{strings.group}</InputLabel>
-              <Select
-                value={this.state.collection}
-                onChange={this.handleChangeGroup}
-                inputProps={{
-                  name: "group",
-                  id: "age-simple"
-                }}
-              >
-                {this.state.collections.map(d => (
-                  <MenuItem value={d.id_collections}>{`${d.collections_name} [${
-                    d.id_collections
-                  }]`}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
+          <FormControl className={classes.formControl}>
+            <InputLabel htmlFor="age-simple">{strings.group}</InputLabel>
+            <Select
+              value={this.state.collection}
+              onChange={this.handleChangeGroup}
+              inputProps={{
+                name: "group",
+                id: "age-simple"
+              }}
+            >
+              {this.state.collections.map(d => (
+                <MenuItem value={d.id_collections}>{`${d.collections_name} [${
+                  d.id_collections
+                }]`}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         );
         break;
       case "device":
         subcategorySelect = (
-          <Grid item xs={12}>
-            <FormControl className={classes.formControl}>
-              <InputLabel htmlFor="age-simple">{strings.device}</InputLabel>
-              <Select
-                value={this.state.device}
-                onChange={this.handleChange}
-                inputProps={{
-                  name: "device",
-                  id: "age-simple"
-                }}
-              >
-                {this.state.devices.map(d => (
-                  <MenuItem value={d.id_devices}>{`${d.devices_name} [${
-                    d.id_devices
-                  }]`}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
+          <FormControl className={classes.formControl}>
+            <InputLabel htmlFor="age-simple">{strings.device}</InputLabel>
+            <Select
+              value={this.state.device}
+              onChange={this.handleChange}
+              inputProps={{
+                name: "device",
+                id: "age-simple"
+              }}
+            >
+              {this.state.devices.map(d => (
+                <MenuItem value={d.id_devices}>{`${d.devices_name} [${
+                  d.id_devices
+                }]`}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         );
         break;
     }
 
     return (
       <Grid container direction="row" justify="center" alignItems="center">
-        <Grid item xs={12}>
+        <Grid item xs={12} className={classes.row}>
+          <Pager className={classes.pager}>
+            <Pager.Item
+              className={`${classes.pagerItemLeft} ${
+                this.state.subcategory === "all" ? classes.pagerItemClicked : ""
+              }`}
+              onClick={() => this.handleChangeSubCategory("all")}
+            >
+              All
+            </Pager.Item>
+            <Pager.Item
+              className={`${classes.pagerItem} ${
+                this.state.subcategory === "group"
+                  ? classes.pagerItemClicked
+                  : ""
+              }`}
+              onClick={() => this.handleChangeSubCategory("group")}
+            >
+              Group
+            </Pager.Item>
+            <Pager.Item
+              className={`${classes.pagerItem} ${
+                this.state.subcategory === "device"
+                  ? classes.pagerItemClicked
+                  : ""
+              }`}
+              onClick={() => this.handleChangeSubCategory("device")}
+            >
+              Device
+            </Pager.Item>
+          </Pager>
           <Pager className={classes.pager}>
             <Pager.Item
               className={`${classes.pagerItemLeft} ${
@@ -387,70 +431,38 @@ class Stats extends Component {
             </Pager.Item>
           </Pager>
         </Grid>
-        <Grid item xs={12}>
-          <Pager className={classes.pager}>
-            {this.state.category !== "total" ? (
+        <Grid item xs={12} className={classes.row}>
+          {subcategorySelect}
+          {this.state.category !== "total" ? (
+            <Pager className={classes.pager}>
               <Pager.Item
                 className={classes.pagerItemLeft}
                 onClick={this.handleSubstractDate}
               >
                 &larr;
               </Pager.Item>
-            ) : null}
-            <span className={classes.pagerItem}>{dateString}</span>
-            {this.state.category !== "total" ? (
-              <Pager.Item
-                className={classes.pagerItemRight}
-                onClick={this.handleAddDate}
+              <span className={classes.pagerItem}>{dateString}</span>
+              {this.state.category !== "total" ? (
+                <Pager.Item
+                  className={classes.pagerItemRight}
+                  onClick={this.handleAddDate}
+                >
+                  &rarr;
+                </Pager.Item>
+              ) : null}
+              <Button
+                className={classes.resetButton}
+                color="primary"
+                variant="contained"
+                onClick={this.handleResetDate}
               >
-                &rarr;
-              </Pager.Item>
-            ) : null}
-          </Pager>
-          <Button
-            className={classes.resetButton}
-            color="primary"
-            variant="contained"
-            onClick={this.handleResetDate}
-          >
-            Reset
-          </Button>
+                Reset
+              </Button>
+            </Pager>
+          ) : null}
         </Grid>
-        <Grid item xs={12}>
-          <Pager className={classes.pager}>
-            <Pager.Item
-              className={`${classes.pagerItemLeft} ${
-                this.state.subcategory === "all" ? classes.pagerItemClicked : ""
-              }`}
-              onClick={() => this.handleChangeSubCategory("all")}
-            >
-              All
-            </Pager.Item>
-            <Pager.Item
-              className={`${classes.pagerItem} ${
-                this.state.subcategory === "group"
-                  ? classes.pagerItemClicked
-                  : ""
-              }`}
-              onClick={() => this.handleChangeSubCategory("group")}
-            >
-              Group
-            </Pager.Item>
-            <Pager.Item
-              className={`${classes.pagerItem} ${
-                this.state.subcategory === "device"
-                  ? classes.pagerItemClicked
-                  : ""
-              }`}
-              onClick={() => this.handleChangeSubCategory("device")}
-            >
-              Device
-            </Pager.Item>
-          </Pager>
-        </Grid>
-        {subcategorySelect}
         <Hidden mdDown>
-          <Grid item xs={12}>
+          <Grid item xs={12} className={classes.topGraph}>
             <Paper className={classes.root} elevation={1}>
               <Typography variant="headline" component="h4">
                 {strings.heatmap}

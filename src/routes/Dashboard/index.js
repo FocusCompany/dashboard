@@ -8,7 +8,6 @@ import Button from "@material-ui/core/Button";
 import Drawer from "@material-ui/core/Drawer";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
@@ -31,6 +30,8 @@ import AccountRoute from "./Account";
 import StatsRoute from "./Stats";
 import DevicesRoute from "./Devices";
 import FiltersRoute from "./Filters";
+
+const Logo = require("../../2019_logo_focus.png");
 
 const drawerWidth = 240;
 
@@ -59,6 +60,14 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
     height: "100%"
+  },
+  logo: {
+    maxWidth: "20%",
+    maxHeight: "24px"
+  },
+  signOutButton: {
+    position: "absolute",
+    right: "16px"
   },
   grow: {
     flexGrow: 1
@@ -268,15 +277,12 @@ class Dashboard extends Component {
                       >
                         <MenuIcon />
                       </IconButton>
-                      <Typography
-                        variant="title"
+                      <img className={classes.logo} src={Logo} />
+                      <Button
+                        className={classes.signOutButton}
                         color="inherit"
-                        noWrap
-                        className={classes.grow}
+                        onClick={this.logOut}
                       >
-                        Focus
-                      </Typography>
-                      <Button color="inherit" onClick={this.logOut}>
                         {strings.signOutButton}
                       </Button>
                     </Toolbar>

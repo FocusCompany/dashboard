@@ -96,7 +96,6 @@ class SignForm extends Component {
       "POST"
     )
       .then(res => {
-        Toast.info(strings.loggingIn);
         this.props.changeLoggedInState(true, res.token);
       })
       .catch(err => {
