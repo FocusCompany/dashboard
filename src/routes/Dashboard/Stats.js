@@ -136,6 +136,7 @@ class Stats extends Component {
     collection: 0,
     devices: [],
     device: 0,
+    forReset: false,
 
     calendar: [], // Calendar data
     total: [], // Processes data, pie and bar for now
@@ -176,7 +177,7 @@ class Stats extends Component {
     const dateTmp = moment(this.state.date);
     let options = {};
     if (device) {
-      if (this.state.category === "total") {
+      if (this.state.category === "global") {
         options = { device };
       } else {
         options = {
@@ -186,7 +187,7 @@ class Stats extends Component {
         };
       }
     } else if (collection) {
-      if (this.state.category === "total") {
+      if (this.state.category === "global") {
         options = { collection };
       } else {
         options = {
@@ -196,7 +197,7 @@ class Stats extends Component {
         };
       }
     } else {
-      if (this.state.category !== "total") {
+      if (this.state.category !== "global") {
         options = {
           from: dateTmp.toISOString(),
           to: dateTmp.add(1, this.state.category).toISOString()
@@ -249,7 +250,7 @@ class Stats extends Component {
   };
 
   handleSubstractDate = () => {
-    if (this.state.category === "total") return;
+    if (this.state.category === "global") return;
     const dateTmp = moment(this.state.date);
     this.setState(
       { date: dateTmp.subtract(1, this.state.category) },
@@ -258,7 +259,7 @@ class Stats extends Component {
   };
 
   handleAddDate = () => {
-    if (this.state.category === "total") return;
+    if (this.state.category === "global") return;
     const dateTmp = moment(this.state.date);
     this.setState(
       { date: dateTmp.add(1, this.state.category) },
@@ -267,11 +268,17 @@ class Stats extends Component {
   };
 
   handleResetDate = () => {
-    if (this.state.category === "total") return;
-    this.setState(
-      { date: moment().startOf(this.state.category) },
-      this.handleRefreshData
-    );
+    if (this.state.category === "global") {
+      this.setState({ forReset: !this.state.forReset });
+    } else {
+      this.setState(
+        {
+          forReset: !this.state.forReset,
+          date: moment().startOf(this.state.category)
+        },
+        this.handleRefreshData
+      );
+    }
   };
 
   handleChangeCategory = category => {
@@ -290,8 +297,8 @@ class Stats extends Component {
     const dateTmp = moment(this.state.date);
     let dateString = "";
     switch (this.state.category) {
-      case "total":
-        dateString = "Total";
+      case "global":
+        dateString = "Global";
         break;
       case "year":
         dateString = dateTmp.format("YYYY");
@@ -391,11 +398,11 @@ class Stats extends Component {
           <Pager className={classes.pager}>
             <Pager.Item
               className={`${classes.pagerItemLeft} ${
-                this.state.category === "total" ? classes.pagerItemClicked : ""
+                this.state.category === "global" ? classes.pagerItemClicked : ""
               }`}
-              onClick={() => this.handleChangeCategory("total")}
+              onClick={() => this.handleChangeCategory("global")}
             >
-              Total
+              Global
             </Pager.Item>
             <Pager.Item
               className={`${classes.pagerItem} ${
@@ -433,7 +440,7 @@ class Stats extends Component {
         </Grid>
         <Grid item xs={12} className={classes.row}>
           {subcategorySelect}
-          {this.state.category !== "total" ? (
+          {this.state.category !== "global" ? (
             <Pager className={classes.pager}>
               <Pager.Item
                 className={classes.pagerItemLeft}
@@ -442,7 +449,7 @@ class Stats extends Component {
                 &larr;
               </Pager.Item>
               <span className={classes.pagerItem}>{dateString}</span>
-              {this.state.category !== "total" ? (
+              {this.state.category !== "global" ? (
                 <Pager.Item
                   className={classes.pagerItemRight}
                   onClick={this.handleAddDate}
@@ -469,7 +476,13 @@ class Stats extends Component {
               </Typography>
               <Typography>
                 {this.state.heatmap.length > 0 ? (
-                  <CalendarHeatmapGraph data={this.state.heatmap} />
+                  <CalendarHeatmapGraph
+                    key={`${this.state.category}/${this.state.device}/${
+                      this.state.collection
+                    }/${this.state.forReset}`}
+                    data={this.state.heatmap}
+                    overview={this.state.category}
+                  />
                 ) : (
                   strings.heatmapNoData
                 )}

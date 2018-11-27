@@ -35,7 +35,7 @@ class CalendarHeatmapGraph extends Graph {
 }
 
 CalendarHeatmapGraph.defaultProps = {
-  overview: "year"
+  overview: "week"
 };
 
 export default CalendarHeatmapGraph;
