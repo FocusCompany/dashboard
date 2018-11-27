@@ -1,4 +1,5 @@
 import { Toast } from "../../../utils";
+import $ from "jquery";
 
 const stubData = [
   {
@@ -120,15 +121,23 @@ export default class graphData {
   // Fecthes() then converts to type
   static get(type, options, reload) {
     return new Promise((resolve, reject) => {
+      console.log(options);
       if (!this.data || reload) {
+        console.log($.param(options));
         fetch("http://backend.thefocuscompany.me:8080/window", {
           method: "POST",
           headers: {
-            Authorization: localStorage.getItem("token")
-          }
+            Authorization: localStorage.getItem("token"),
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: $.param(options)
         })
           .then(data => data.json())
           .then(data => {
+            console.log(data);
+            if (!data) {
+              data = [];
+            }
             data = data.map(d => {
               d.start = new Date(d.start);
               d.end = new Date(d.end);
