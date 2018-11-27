@@ -39,6 +39,10 @@ import Chip from "@material-ui/core/Chip";
 
 const strings = new LocalizedStrings({
   en: {
+    error: "Could not get device list",
+    errorGroup: "Could not get group list",
+    errorDelete: "Could not delete device",
+    successDelete: "Device deleted successfully",
     devices: "Devices",
     groups: "Groups",
     changeDescription:
@@ -50,6 +54,10 @@ const strings = new LocalizedStrings({
     delete: "Delete"
   },
   fr: {
+    error: "Impossible d'obtenir la liste des appareils",
+    errorGroup: "Impossible d'obtenir la liste des groupes",
+    errorDelete: "Impossible de supprimer l'appareil",
+    successDelete: "Appareil supprimé",
     devices: "Appareils",
     groups: "Groupes",
     changeDescription:
@@ -125,11 +133,11 @@ class Devices extends Component {
             this.setState({ collections: res.collections });
           })
           .catch(err => {
-            Toast.error("Could not get device list");
+            Toast.error(strings.error);
           });
       })
       .catch(err => {
-        Toast.error("Could not get device list");
+        Toast.error(strings.errorGroup);
       });
   };
 
@@ -164,10 +172,10 @@ class Devices extends Component {
         true
       )
         .then(res => {
-          Toast.success("Device deleted successfully !");
+          Toast.success(strings.successDelete);
         })
         .catch(err => {
-          Toast.error("Could delete device");
+          Toast.error(strings.errorDelete);
         });
     } else {
       const dev_id = this.state.device.id_devices;

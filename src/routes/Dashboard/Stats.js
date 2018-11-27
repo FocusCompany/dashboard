@@ -29,6 +29,8 @@ const strings = new LocalizedStrings({
   en: {
     reset: "Reset",
     error: "Could not get device list",
+    errorGroup: "Could not get group list",
+    noGroup: "No group exists",
     all: "All",
     group: "Group",
     device: "Device",
@@ -48,6 +50,8 @@ const strings = new LocalizedStrings({
   fr: {
     reset: "Réinitialiser",
     error: "Impossible d'obtenir la liste des appareils",
+    errorGroup: "Impossible d'obtenir la liste des groupes",
+    noGroup: "Aucun groupe n'existe",
     all: "Tout",
     group: "Groupe",
     device: "Appareil",
@@ -178,7 +182,7 @@ class Stats extends Component {
         });
       })
       .catch(err => {
-        Toast.error("Could not get device list");
+        Toast.error(strings.errorGroup);
       });
     this.refreshData({});
   }
@@ -238,7 +242,7 @@ class Stats extends Component {
         if (this.state.collection) {
           this.refreshData({ collection: this.state.collection });
         } else {
-          Toast.info("No group exists");
+          Toast.info(strings.noGroup);
           this.setState({ subcategory: "all" }, () => this.refreshData({}));
         }
       } else {

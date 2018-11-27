@@ -151,7 +151,6 @@ export default class graphData {
             }
           })
           .catch(err => {
-            Toast.warn(`Could not fetch data for ${type}, using stub`);
             if (processor[type]) {
               return resolve(processor[type](stubData));
             } else {
