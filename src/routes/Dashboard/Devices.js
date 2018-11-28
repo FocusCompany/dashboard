@@ -76,7 +76,6 @@ const styles = theme => ({
   },
   list: {
     width: "100%",
-    //maxWidth: 360,
     backgroundColor: theme.palette.background.paper
   },
   listItem: {
@@ -220,13 +219,12 @@ class Devices extends Component {
     } else {
       await callRenewAPI(
         "/delete_group",
-        { collections_name: group },
+        { collections_name: this.state.group },
         "DELETE",
         null,
         true
       );
     }
-    this.closeGroupDelete();
   };
 
   handleCheckChange = name => event => {
@@ -299,7 +297,9 @@ class Devices extends Component {
                           <Grid xs={12} sm={6} md={4} lg={3} xl={2}>
                             <ListItem
                               button
-                              onClick={() => this.deleteGroup(c.id_collections)}
+                              onClick={() =>
+                                this.deleteGroup(c.collections_name)
+                              }
                               className={classes.listItem}
                               key={c.id_collections}
                             >

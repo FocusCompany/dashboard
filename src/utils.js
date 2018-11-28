@@ -1,15 +1,7 @@
 import { toast } from "react-toastify";
-//import 'react-toastify/dist/ReactToastify.css';
 import $ from "jquery";
 
 const APIRoot = "http://auth.thefocuscompany.me:3000/api/v1";
-
-/*export const Toast = {
-  error: text => console.error(text),
-  info: text => console.info(text),
-  warn: text => console.warn(text),
-  success: text => console.log(text)
-};*/
 
 export const Toast = {
   error: text => toast.error(text),
@@ -17,28 +9,6 @@ export const Toast = {
   success: text => toast.success(text),
   warning: text => toast.warn(text)
 };
-
-/* const Toast = {
-	error: (text, title) => toast({
-		heading: title || 'Error',
-		text: text,
-		showHideTransition: 'slide',
-		icon: 'error',
-		hideAfter: false
-	}),
-	info: (text, title) => $.toast({
-		heading: title || 'Success',
-		text: text,
-		showHideTransition: 'slide',
-		icon: 'info'
-	}),
-	success: (text, title) => $.toast({
-		heading: 'Success',
-		text: text,
-		showHideTransition: 'slide',
-		icon: 'success'
-	})
-} */
 
 export function ellipsizeText(text) {
   const length = 30;

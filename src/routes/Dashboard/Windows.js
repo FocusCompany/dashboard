@@ -107,7 +107,8 @@ const styles = theme => ({
     paddingBottom: "8px",
     backgroundColor: "#E6E6E6",
     marginLeft: "-1px",
-    fontFamily: "Roboto"
+    fontFamily: "Roboto",
+    whiteSpace: "nowrap"
   },
   pagerItemLeft: {
     display: "block",
