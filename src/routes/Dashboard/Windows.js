@@ -189,10 +189,13 @@ class Stats extends Component {
                   : res.collections[0].id_collections
                 : 0;
             localStorage.setItem("collection", new_collection);
-            this.setState({
-              collections: res.collections,
-              collection: new_collection
-            });
+            this.setState(
+              {
+                collections: res.collections,
+                collection: new_collection
+              },
+              () => this.handleRefreshData({})
+            );
           })
           .catch(err => {
             Toast.error(strings.errorGroup);
@@ -202,7 +205,6 @@ class Stats extends Component {
         console.log(err);
         Toast.error(strings.error);
       });
-    this.refreshData({});
   }
 
   refreshData = ({ device, collection }) => {
@@ -237,15 +239,16 @@ class Stats extends Component {
       }
     }
     GraphData.get("total", options, true, this.state.process).then(t_data => {
-      GraphData.get("heatmap", options, false, this.state.process).then(
+      GraphData.get("heatmap", options, true, this.state.process).then(
         h_data => {
-          GraphData.get("summary", options, false, this.state.process).then(
+          GraphData.get("summary", options, true, this.state.process).then(
             s_data => {
               this.setState(
                 {
                   summary: s_data,
                   heatmap: h_data,
-                  total: t_data
+                  total: t_data,
+                  forReset: !this.state.forReset
                 },
                 () => this.forceUpdate()
               );
