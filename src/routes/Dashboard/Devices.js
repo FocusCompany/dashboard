@@ -51,7 +51,10 @@ const strings = new LocalizedStrings({
     discard: "Discard",
     save: "Save",
     deleteGroup: "Delete group",
-    delete: "Delete"
+    delete: "Delete",
+    createButton: "Create new group",
+    createGroup: "Name of the new group :",
+    create: "Create"
   },
   fr: {
     error: "Impossible d'obtenir la liste des appareils",
@@ -66,7 +69,10 @@ const strings = new LocalizedStrings({
     discard: "Annuler",
     save: "Sauvegarder",
     deleteGroup: "Supprimer le groupe",
-    delete: "Supprimer"
+    delete: "Supprimer",
+    createButton: "Créer un nouveau groupe",
+    createGroup: "Nom du nouveau groupe:",
+    create: "Créer"
   }
 });
 
@@ -120,7 +126,9 @@ class Devices extends Component {
     ed_delete: false,
     collections: [],
 
-    groupDelete: false
+    groupDelete: false,
+    groupCreate: false,
+    newGroup: ""
   };
 
   refresh = () => {
@@ -224,6 +232,27 @@ class Devices extends Component {
         null,
         true
       );
+      this.closeGroupDelete();
+    }
+  };
+
+  closeGroupCreate = () => {
+    this.setState({ groupCreate: false, newGroup: "" });
+    this.refresh();
+  };
+
+  createGroup = async toCreate => {
+    if (toCreate) {
+      this.setState({ groupCreate: true });
+    } else {
+      await callRenewAPI(
+        "/create_group",
+        { collections_name: this.state.newGroup },
+        "POST",
+        null,
+        true
+      );
+      this.closeGroupCreate();
     }
   };
 
@@ -315,6 +344,15 @@ class Devices extends Component {
                 </Grid>
               </List>
             </ExpansionPanelDetails>
+            <ExpansionPanelDetails>
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={() => this.createGroup(true)}
+              >
+                {strings.createButton}
+              </Button>
+            </ExpansionPanelDetails>
           </ExpansionPanel>
 
           <Dialog
@@ -405,12 +443,41 @@ class Devices extends Component {
                 {strings.discard}
               </Button>
               <Button
-                onClick={this.deleteGroup}
+                onClick={() => this.deleteGroup(null)}
                 variant="contained"
                 color="secondary"
                 autoFocus
               >
                 {strings.delete}
+              </Button>
+            </DialogActions>
+          </Dialog>
+
+          <Dialog
+            fullScreen={fullScreen}
+            open={this.state.groupCreate}
+            onClose={this.closeGroupCreate}
+            aria-labelledby="responsive-dialog-title"
+          >
+            <DialogTitle id="responsive-dialog-title">{`Create Group`}</DialogTitle>
+            <DialogContent>
+              <DialogContentText>{strings.createGroup}</DialogContentText>
+              <Input
+                value={this.state.newGroup}
+                onChange={e => this.setState({ newGroup: e.target.value })}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.closeGroupCreate} color="secondary">
+                {strings.discard}
+              </Button>
+              <Button
+                onClick={() => this.createGroup(false)}
+                variant="contained"
+                color="secondary"
+                autoFocus
+              >
+                {strings.create}
               </Button>
             </DialogActions>
           </Dialog>
