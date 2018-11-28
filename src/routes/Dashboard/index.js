@@ -254,7 +254,6 @@ class Dashboard extends Component {
       <Router>
         <Switch>
           <Route path="/graph" component={StatsRoute} />
-
           <Route
             path="/"
             render={() => (
@@ -300,14 +299,16 @@ class Dashboard extends Component {
                     )}
                   >
                     <div className={classes.drawerHeader} />
-                    <Route exact path="/" component={StatsRoute} />
-                    <Route path="/devices" component={DevicesRoute} />
-                    <Route
-                      path="/account"
-                      render={() => <AccountRoute logOut={this.logOut} />}
-                    />
-                    <Route path="/filters" component={FiltersRoute} />
-                    <Route path="/:process" component={WindowsRoute} />
+                    <Switch>
+                      <Route exact path="/" component={StatsRoute} />
+                      <Route exact path="/devices" component={DevicesRoute} />
+                      <Route
+                        path="/account"
+                        render={() => <AccountRoute logOut={this.logOut} />}
+                      />
+                      <Route exact path="/filters" component={FiltersRoute} />
+                      <Route path="/:process" component={WindowsRoute} />
+                    </Switch>
                   </main>
                 </div>
               </div>
