@@ -54,7 +54,10 @@ const strings = new LocalizedStrings({
     delete: "Delete",
     createButton: "Create new group",
     createGroup: "Name of the new group :",
-    create: "Create"
+    create: "Create",
+    deviceEditor: "Device Editor",
+    groupDelete: "Group Delete",
+    groupCreate: "Create Group"
   },
   fr: {
     error: "Impossible d'obtenir la liste des appareils",
@@ -72,7 +75,10 @@ const strings = new LocalizedStrings({
     delete: "Supprimer",
     createButton: "Créer un nouveau groupe",
     createGroup: "Nom du nouveau groupe:",
-    create: "Créer"
+    create: "Créer",
+    deviceEditor: "Editeur d'appareil",
+    groupDelete: "Supprimer un groupe",
+    groupCreate: "Créer un groupe"
   }
 });
 
@@ -361,8 +367,10 @@ class Devices extends Component {
             onClose={this.closeEditor}
             aria-labelledby="responsive-dialog-title"
           >
-            <DialogTitle id="responsive-dialog-title">{`Device Editor - ${this
-              .state.device && this.state.device.devices_name}`}</DialogTitle>
+            <DialogTitle id="responsive-dialog-title">{`${
+              strings.deviceEditor
+            } - ${this.state.device &&
+              this.state.device.devices_name}`}</DialogTitle>
             <DialogContent>
               <DialogContentText>{strings.changeDescription}</DialogContentText>
 
@@ -430,9 +438,9 @@ class Devices extends Component {
             onClose={this.closeGroupDelete}
             aria-labelledby="responsive-dialog-title"
           >
-            <DialogTitle id="responsive-dialog-title">{`Group Delete - ${
-              this.state.group
-            }`}</DialogTitle>
+            <DialogTitle id="responsive-dialog-title">{`${
+              strings.groupDelete
+            } - ${this.state.group}`}</DialogTitle>
             <DialogContent>
               <DialogContentText>
                 {strings.deleteGroup} {this.state.group} ?
@@ -459,7 +467,9 @@ class Devices extends Component {
             onClose={this.closeGroupCreate}
             aria-labelledby="responsive-dialog-title"
           >
-            <DialogTitle id="responsive-dialog-title">{`Create Group`}</DialogTitle>
+            <DialogTitle id="responsive-dialog-title">{`${
+              strings.groupCreate
+            }`}</DialogTitle>
             <DialogContent>
               <DialogContentText>{strings.createGroup}</DialogContentText>
               <Input
