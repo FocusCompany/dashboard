@@ -1,5 +1,5 @@
 import $ from "jquery";
-import { ellipsizeText } from "../../../utils";
+import { ellipsizeText, callRenewBACK } from "../../../utils";
 
 const stubData = [
   {
@@ -142,15 +142,7 @@ export default class graphData {
       console.log(options);
       if (!this.data || reload) {
         console.log($.param(options));
-        fetch("http://backend.thefocuscompany.me:8080/window", {
-          method: "POST",
-          headers: {
-            Authorization: localStorage.getItem("token"),
-            "Content-Type": "application/x-www-form-urlencoded"
-          },
-          body: $.param(options)
-        })
-          .then(data => data.json())
+        callRenewBACK("/window", $.param(options), "POST", null, true)
           .then(data => {
             console.log(data);
             if (!data) {

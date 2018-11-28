@@ -3,7 +3,7 @@ import LocalizedStrings from "localized-strings";
 
 import { withStyles } from "@material-ui/core/styles";
 
-import { Toast } from "../../utils";
+import { Toast, callRenewBACK } from "../../utils";
 
 import Select from "react-select";
 import { Button } from "@material-ui/core";
@@ -12,12 +12,18 @@ const strings = new LocalizedStrings({
   en: {
     doNoDisturbWhen: "Do not disturb when on:",
     error: "Could not get process list",
+    error2: "Could not get filters",
+    error3: "Could not update filters",
+    success: "Filters updated",
     reset: "Reset",
     update: "Update"
   },
   fr: {
     doNoDisturbWhen: "Ne pas déranger quand je suis sur:",
     error: "Impossible de récupérer la liste des processus",
+    error2: "Impossible de récupérer les filtres",
+    error3: "Impossible de mettre à jour les filtres",
+    success: "Filtres mis à jour",
     reset: "Réinitialiser",
     update: "Mettre à jour"
   }
@@ -41,14 +47,7 @@ class Filters extends Component {
   };
 
   componentDidMount() {
-    fetch("http://backend.thefocuscompany.me:8080/process/list", {
-      method: "POST",
-      headers: {
-        Authorization: localStorage.getItem("token"),
-        "Content-Type": "application/x-www-form-urlencoded"
-      }
-    })
-      .then(data => data.json())
+    callRenewBACK("/process/list", null, "POST", null, true)
       .then(data => {
         this.setState({
           processes: data.reduce((reducer, process) => {
@@ -57,6 +56,18 @@ class Filters extends Component {
             return reducer;
           }, [])
         });
+        callRenewBACK("/filters", null, "GET", null, true)
+          .then(data => {
+            const values = data.reduce((reducer, process) => {
+              if (process !== "")
+                reducer.push({ value: process, label: process });
+              return reducer;
+            }, []);
+            this.setState({ oldValues: values, currentValues: values });
+          })
+          .catch(err => {
+            Toast.error(strings.error2);
+          });
       })
       .catch(err => {
         Toast.error(strings.error);
@@ -68,7 +79,19 @@ class Filters extends Component {
       reducer.push(value.value);
       return reducer;
     }, []);
-    console.log(newValues);
+    callRenewBACK(
+      "/filters",
+      `filters=${newValues.join(",")}`,
+      "POST",
+      null,
+      true
+    )
+      .then(data => {
+        Toast.success(strings.success);
+      })
+      .catch(err => {
+        Toast.error(strings.error3);
+      });
   };
 
   render() {

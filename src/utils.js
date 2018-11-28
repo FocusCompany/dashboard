@@ -2,6 +2,7 @@ import { toast } from "react-toastify";
 import $ from "jquery";
 
 const APIRoot = "http://auth.thefocuscompany.me:3000/api/v1";
+const BACKRoot = "http://backend.thefocuscompany.me:8080";
 
 export const Toast = {
   error: text => toast.error(text),
@@ -72,6 +73,56 @@ export function callRenewAPI(endpoint, data, method, extraHeaders, bearer) {
             localStorage.token = res.token;
             console.log("Token renewed");
             callAPI(endpoint, data, method, extraHeaders, bearer)
+              .then(res => {
+                console.log("Second request attempt");
+                resolve(res);
+              })
+              .catch(err => {
+                console.log("Second request failed");
+                reject(err);
+              });
+          })
+          .catch(err => {
+            console.log("Token renewal rejected");
+            reject(err);
+          });
+      });
+  });
+}
+
+export function callBACK(endpoint, data, method, extraHeaders, bearer) {
+  // API Promise "Generator"
+  if (bearer === true && extraHeaders !== null) {
+    extraHeaders.Authorization = localStorage.token;
+    extraHeaders["Content-Type"] = "application/x-www-form-urlencoded";
+  } else if (bearer === true)
+    extraHeaders = {
+      Authorization: localStorage.token,
+      "Content-Type": "application/x-www-form-urlencoded"
+    };
+
+  return fetch(BACKRoot + endpoint, {
+    method: method || "POST",
+    headers: extraHeaders,
+    body: data
+  }).then(data => data.json());
+}
+
+export function callRenewBACK(endpoint, data, method, extraHeaders, bearer) {
+  return new Promise((resolve, reject) => {
+    callBACK(endpoint, data, method, extraHeaders, bearer)
+      .then(res => {
+        console.log("Token seems valid");
+        resolve(res);
+      })
+      .catch(err => {
+        console.log(err);
+        console.log("Token expired, attempting to renew");
+        callAPI("/renew_jwt", { token: localStorage.token }, "POST")
+          .then(res => {
+            localStorage.token = res.token;
+            console.log("Token renewed");
+            callBACK(endpoint, data, method, extraHeaders, bearer)
               .then(res => {
                 console.log("Second request attempt");
                 resolve(res);
