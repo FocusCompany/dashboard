@@ -30,6 +30,7 @@ import AccountRoute from "./Account";
 import StatsRoute from "./Stats";
 import DevicesRoute from "./Devices";
 import FiltersRoute from "./Filters";
+import WindowsRoute from "./Windows";
 
 const Logo = require("../../2019_logo_focus.png");
 
@@ -306,6 +307,7 @@ class Dashboard extends Component {
                       render={() => <AccountRoute logOut={this.logOut} />}
                     />
                     <Route path="/filters" component={FiltersRoute} />
+                    <Route path="/:process" component={WindowsRoute} />
                   </main>
                 </div>
               </div>

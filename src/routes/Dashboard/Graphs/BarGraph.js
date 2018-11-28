@@ -2,6 +2,7 @@ import React from "react";
 import { ComposedChart, Bar, XAxis, YAxis, Tooltip } from "recharts";
 import Graph from "./Graph";
 import { getTimeFromSeconds } from "../../../utils";
+import { withRouter } from "react-router-dom";
 
 function getFont() {
   const div = document.querySelector("body");
@@ -50,7 +51,7 @@ function getScrollBarWidth () {
 	return (w1 - w2);
 };*/
 
-class BarGraph extends Graph {
+export class BarGraph extends Graph {
   render() {
     var maxWidth = 0;
     var tmpWidth = 0;
@@ -60,7 +61,8 @@ class BarGraph extends Graph {
         maxWidth = tmpWidth;
       }
     }
-    var height = 68 + 25 * this.state.data.length;
+    var height = 38 + 25 * this.state.data.length;
+    height = this.state.height;
     return (
       <div
         id="bar-graph"
@@ -84,7 +86,15 @@ class BarGraph extends Graph {
             width={maxWidth}
             interval={0}
           />
-          <Bar dataKey="length" fill="#8884d8" />
+          <Bar
+            dataKey="length"
+            fill="#8884d8"
+            onClick={
+              this.props.clickable
+                ? d => this.props.history.push(`/${d.process}`)
+                : null
+            }
+          />
           <Tooltip
             cursor={false}
             formatter={seconds => getTimeFromSeconds(seconds)}
@@ -95,4 +105,4 @@ class BarGraph extends Graph {
   }
 }
 
-export default BarGraph;
+export default withRouter(BarGraph);

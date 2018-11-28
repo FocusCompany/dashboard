@@ -154,6 +154,7 @@ class Stats extends Component {
     devices: [],
     device: parseInt(localStorage.getItem("device"), 10) || 0,
     forReset: false,
+    process: this.props.match.params.process,
 
     calendar: [], // Calendar data
     total: [], // Processes data, pie and bar for now
@@ -234,19 +235,23 @@ class Stats extends Component {
         };
       }
     }
-    GraphData.get("total", options, true).then(t_data => {
-      GraphData.get("heatmap", options).then(h_data => {
-        GraphData.get("summary", options).then(s_data => {
-          this.setState(
-            {
-              summary: s_data,
-              heatmap: h_data,
-              total: t_data
-            },
-            () => this.forceUpdate()
+    GraphData.get("total", options, true, this.state.process).then(t_data => {
+      GraphData.get("heatmap", options, false, this.state.process).then(
+        h_data => {
+          GraphData.get("summary", options, false, this.state.process).then(
+            s_data => {
+              this.setState(
+                {
+                  summary: s_data,
+                  heatmap: h_data,
+                  total: t_data
+                },
+                () => this.forceUpdate()
+              );
+            }
           );
-        });
-      });
+        }
+      );
     });
   };
 
@@ -533,7 +538,11 @@ class Stats extends Component {
             </Typography>
             <Typography>
               {this.state.total.length > 0 ? (
-                <PieGraph data={this.state.total} height="300px" />
+                <PieGraph
+                  data={this.state.total}
+                  height="300px"
+                  clickable={false}
+                />
               ) : (
                 strings.totalTimeSpentNoData
               )}
@@ -564,7 +573,7 @@ class Stats extends Component {
                 <CombinedBarGraph
                   data={this.state.total}
                   height={400}
-                  clickable={true}
+                  clickable={false}
                 />
               ) : (
                 strings.processActivityNoData

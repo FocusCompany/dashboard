@@ -33,7 +33,6 @@ class HalfPieGraph extends Graph {
             data={this.state.data}
             nameKey="name"
             dataKey="value"
-            label
           >
             {this.state.data.map((entry, index) => (
               <Cell

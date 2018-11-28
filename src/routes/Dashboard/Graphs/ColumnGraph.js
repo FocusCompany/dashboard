@@ -2,6 +2,7 @@ import React from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip } from "recharts";
 import Graph from "./Graph";
 import { getTimeFromSeconds } from "../../../utils";
+import { withRouter } from "react-router-dom";
 
 function getFont() {
   const div = document.querySelector("body");
@@ -24,7 +25,7 @@ function getTextWidth(text) {
   return Math.ceil(metric.width * 0.7); // measureText method's return value may be slightly underestimated, add some pixels or scale it
 }
 
-class ColumnGraph extends Graph {
+export class ColumnGraph extends Graph {
   render() {
     var maxHeight = 0;
     var tmpHeight = 0;
@@ -57,7 +58,15 @@ class ColumnGraph extends Graph {
             type="number"
             tickFormatter={seconds => getTimeFromSeconds(seconds)}
           />
-          <Bar dataKey="length" fill="#8884d8" />
+          <Bar
+            dataKey="length"
+            fill="#8884d8"
+            onClick={
+              this.props.clickable
+                ? d => this.props.history.push(`/${d.process}`)
+                : null
+            }
+          />
           <Tooltip
             cursor={false}
             formatter={seconds => getTimeFromSeconds(seconds)}
@@ -68,4 +77,4 @@ class ColumnGraph extends Graph {
   }
 }
 
-export default ColumnGraph;
+export default withRouter(ColumnGraph);

@@ -2,10 +2,10 @@ import React from "react";
 
 import { storiesOf } from "@storybook/react";
 
-import BarGraph from "../routes/Dashboard/Graphs/BarGraph";
-import ColumnGraph from "../routes/Dashboard/Graphs/ColumnGraph";
+import { BarGraph } from "../routes/Dashboard/Graphs/BarGraph";
+import { ColumnGraph } from "../routes/Dashboard/Graphs/ColumnGraph";
 import HalfPieGraph from "../routes/Dashboard/Graphs/HalfPieGraph";
-import PieGraph from "../routes/Dashboard/Graphs/PieGraph";
+import { PieGraph } from "../routes/Dashboard/Graphs/PieGraph";
 
 let DATA = [
   { process: "chrome", length: 1200 },

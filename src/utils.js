@@ -40,6 +40,20 @@ export const Toast = {
 	})
 } */
 
+export function ellipsizeText(text) {
+  const length = 30;
+  if (text == null) {
+    return "";
+  }
+  if (text.length <= length) {
+    return text;
+  }
+  text = text.substring(0, length);
+  const last = text.lastIndexOf(" ");
+  text = text.substring(0, last);
+  return text + "...";
+}
+
 export function getTimeFromSeconds(sec_num) {
   var hours = Math.floor(sec_num / 3600) % 24;
   var minutes = Math.floor(sec_num / 60) % 60;

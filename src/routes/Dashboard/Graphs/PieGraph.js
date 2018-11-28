@@ -3,6 +3,7 @@ import { PieChart, Pie, Cell, Legend, Tooltip } from "recharts";
 import PropTypes from "prop-types";
 import Graph from "./Graph";
 import { getTimeFromSeconds } from "../../../utils";
+import { withRouter } from "react-router-dom";
 
 const COLORS = [
   "#e6194b",
@@ -29,7 +30,7 @@ const COLORS = [
   "#000000"
 ];
 
-class PieGraph extends Graph {
+export class PieGraph extends Graph {
   render() {
     var legend = this.props.legend ? (
       <Legend layout="vertical" align="right" verticalAlign="middle" />
@@ -47,7 +48,16 @@ class PieGraph extends Graph {
           height={this.state.pixelHeight}
           margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
         >
-          <Pie data={this.state.data} nameKey="process" dataKey="length">
+          <Pie
+            data={this.state.data}
+            nameKey="process"
+            dataKey="length"
+            onClick={
+              this.props.clickable
+                ? d => this.props.history.push(`/${d.process}`)
+                : null
+            }
+          >
             {this.state.data.map((entry, index) => (
               <Cell
                 key={index}
@@ -72,7 +82,8 @@ PieGraph.defaultProps = {
   height: "100%",
   legend: true,
   tooltip: true,
-  colors: COLORS
+  colors: COLORS,
+  clickable: true
 };
 
-export default PieGraph;
+export default withRouter(PieGraph);

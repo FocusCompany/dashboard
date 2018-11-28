@@ -1,4 +1,5 @@
 import $ from "jquery";
+import { ellipsizeText } from "../../../utils";
 
 const stubData = [
   {
@@ -35,7 +36,7 @@ function getTime(d) {
   )}:${("00" + d.getSeconds()).slice(-2)}`;
 }
 
-function makeHeatmapData(data) {
+function makeHeatmapData(data, process) {
   let global = [];
   data.forEach(e => {
     const date = new Date(e.start);
@@ -51,37 +52,53 @@ function makeHeatmapData(data) {
       };
       global.push(item);
     }
-    item.details.push({
-      name: e.afk ? "Idle" : e.process,
-      date: `${dateStr} ${timeStr}`,
-      value: Math.abs((e.end - e.start) / 1000)
-    });
-    item.total += Math.abs((e.end - e.start) / 1000);
+    let name = "";
+    if (!process) {
+      name = e.afk ? "Idle" : e.process;
+    } else if (process === e.process) {
+      name = e.afk ? "Idle" : e.window;
+    }
+    name = ellipsizeText(name);
+    if (name !== "") {
+      item.details.push({
+        name: name,
+        date: `${dateStr} ${timeStr}`,
+        value: Math.abs((e.end - e.start) / 1000)
+      });
+      item.total += Math.abs((e.end - e.start) / 1000);
+    }
   });
   return global;
 }
 
-function makeTotalData(data) {
+function makeTotalData(data, process) {
   let total = [];
   data.forEach(e => {
     if (!e.afk) {
-      let item = total.find(
-        i => i.process === (!e.process ? "Idle" : e.process)
-      );
-      if (!item) {
-        item = {
-          process: !e.process ? "Idle" : e.process,
-          length: 0
-        };
-        total.push(item);
+      let name = "";
+      if (!process) {
+        name = !e.process ? "Idle" : e.process;
+      } else if (process === e.process) {
+        name = !e.process ? "Idle" : e.window;
       }
-      item.length += Math.abs((e.end - e.start) / 1000);
+      name = ellipsizeText(name);
+      if (name !== "") {
+        let item = total.find(i => i.process === name);
+        if (!item) {
+          item = {
+            process: name,
+            length: 0
+          };
+          total.push(item);
+        }
+        item.length += Math.abs((e.end - e.start) / 1000);
+      }
     }
   });
   return total;
 }
 
-function makeActivitySummary(data) {
+function makeActivitySummary(data, process) {
   let sum = [
     {
       name: "Activity",
@@ -98,8 +115,10 @@ function makeActivitySummary(data) {
   let total = 0;
 
   data.forEach(e => {
-    sum[e.afk ? 1 : 0].value += Math.abs((e.end - e.start) / 1000);
-    total += Math.abs((e.end - e.start) / 1000);
+    if (!process || process === e.process) {
+      sum[e.afk ? 1 : 0].value += Math.abs((e.end - e.start) / 1000);
+      total += Math.abs((e.end - e.start) / 1000);
+    }
   });
 
   sum.forEach(e => {
@@ -118,7 +137,7 @@ export default class graphData {
   static data = null;
 
   // Fecthes() then converts to type
-  static get(type, options, reload) {
+  static get(type, options, reload, process) {
     return new Promise((resolve, reject) => {
       console.log(options);
       if (!this.data || reload) {
@@ -144,7 +163,7 @@ export default class graphData {
             });
             this.data = data;
             if (processor[type]) {
-              return resolve(processor[type](data));
+              return resolve(processor[type](data, process));
             } else {
               return reject("Unknown data type");
             }
@@ -158,7 +177,7 @@ export default class graphData {
           });
       } else {
         if (processor[type]) {
-          return resolve(processor[type](this.data));
+          return resolve(processor[type](this.data, process));
         } else {
           return reject("Unknown data type");
         }
