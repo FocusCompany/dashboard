@@ -6,13 +6,20 @@ import { withStyles } from "@material-ui/core/styles";
 import { Toast } from "../../utils";
 
 import Select from "react-select";
+import { Button } from "@material-ui/core";
 
 const strings = new LocalizedStrings({
   en: {
-    doNoDisturbWhen: "Do not disturb when on:"
+    doNoDisturbWhen: "Do not disturb when on:",
+    error: "Could not get process list",
+    reset: "Reset",
+    update: "Update"
   },
   fr: {
-    doNoDisturbWhen: "Ne pas déranger quand je suis sur:"
+    doNoDisturbWhen: "Ne pas déranger quand je suis sur:",
+    error: "Impossible de récupérer la liste des processus",
+    reset: "Réinitialiser",
+    update: "Mettre à jour"
   }
 });
 
@@ -22,24 +29,18 @@ const styles = theme => ({
     flexWrap: "wrap"
   },
   formControl: {
-    margin: theme.spacing.unit,
-    width: "90%"
-  },
-  card: {
-    maxWidth: 600
-  },
-  title: {
-    marginBottom: 16,
-    fontSize: 14
+    margin: theme.spacing.unit
   }
 });
 
 class Filters extends Component {
   state = {
-    processes: []
+    processes: [],
+    oldValues: [],
+    currentValues: []
   };
 
-  async componentDidMount() {
+  componentDidMount() {
     fetch("http://backend.thefocuscompany.me:8080/process/list", {
       method: "POST",
       headers: {
@@ -62,15 +63,42 @@ class Filters extends Component {
       });
   }
 
+  handleUpdateClick = () => {
+    const newValues = this.state.currentValues.reduce((reducer, value) => {
+      reducer.push(value.value);
+      return reducer;
+    }, []);
+    console.log(newValues);
+  };
+
   render() {
+    const { classes } = this.props;
     return (
       <div>
-        <span>{strings.doNoDisturbWhen}</span>
+        <span className={classes.formControl}>{strings.doNoDisturbWhen}</span>
         <Select
-          onChange={value => console.log(value)}
+          className={classes.formControl}
+          onChange={value => this.setState({ currentValues: value })}
           isMulti
           options={this.state.processes}
+          value={this.state.currentValues}
         />
+        <Button
+          className={classes.formControl}
+          color="secondary"
+          variant="contained"
+          onClick={() => this.setState({ currentValues: this.state.oldValues })}
+        >
+          {strings.reset}
+        </Button>
+        <Button
+          className={classes.formControl}
+          color="primary"
+          variant="contained"
+          onClick={this.handleUpdateClick}
+        >
+          {strings.update}
+        </Button>
       </div>
     );
   }
