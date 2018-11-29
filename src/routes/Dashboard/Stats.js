@@ -85,7 +85,6 @@ const styles = theme => ({
     flex: "1 1 50%"
   },
   row: {
-    display: "flex",
     justifyContent: "center",
     alignItems: "center"
   },
@@ -404,37 +403,46 @@ class Stats extends Component {
 
     return (
       <Grid container direction="row" justify="center" alignItems="center">
-        <Grid item xs={12} className={classes.row}>
-          <Pager className={classes.pager}>
-            <Pager.Item
-              className={`${classes.pagerItemLeft} ${
-                this.state.subcategory === "all" ? classes.pagerItemClicked : ""
-              }`}
-              onClick={() => this.handleChangeSubCategory("all")}
-            >
-              {strings.all}
-            </Pager.Item>
-            <Pager.Item
-              className={`${classes.pagerItem} ${
-                this.state.subcategory === "group"
-                  ? classes.pagerItemClicked
-                  : ""
-              }`}
-              onClick={() => this.handleChangeSubCategory("group")}
-            >
-              {strings.group}
-            </Pager.Item>
-            <Pager.Item
-              className={`${classes.pagerItemRight} ${
-                this.state.subcategory === "device"
-                  ? classes.pagerItemClicked
-                  : ""
-              }`}
-              onClick={() => this.handleChangeSubCategory("device")}
-            >
-              {strings.device}
-            </Pager.Item>
-          </Pager>
+        <Grid item xs={12} md={6} direction="column" className={classes.row}>
+          <Grid item xs={12} md={12}>
+            <Pager className={classes.pager}>
+              <Pager.Item
+                className={`${classes.pagerItemLeft} ${
+                  this.state.subcategory === "all"
+                    ? classes.pagerItemClicked
+                    : ""
+                }`}
+                onClick={() => this.handleChangeSubCategory("all")}
+              >
+                {strings.all}
+              </Pager.Item>
+              <Pager.Item
+                className={`${classes.pagerItem} ${
+                  this.state.subcategory === "group"
+                    ? classes.pagerItemClicked
+                    : ""
+                }`}
+                onClick={() => this.handleChangeSubCategory("group")}
+              >
+                {strings.group}
+              </Pager.Item>
+              <Pager.Item
+                className={`${classes.pagerItemRight} ${
+                  this.state.subcategory === "device"
+                    ? classes.pagerItemClicked
+                    : ""
+                }`}
+                onClick={() => this.handleChangeSubCategory("device")}
+              >
+                {strings.device}
+              </Pager.Item>
+            </Pager>
+          </Grid>
+          <Grid item xs={12}>
+            {subcategorySelect}
+          </Grid>
+        </Grid>
+        <Grid item xs={12} md={6} className={classes.row}>
           <Pager className={classes.pager}>
             <Pager.Item
               className={`${classes.pagerItemLeft} ${
@@ -477,9 +485,6 @@ class Stats extends Component {
               {strings.day}
             </Pager.Item>
           </Pager>
-        </Grid>
-        <Grid item xs={12} className={classes.row}>
-          {subcategorySelect}
           {this.state.category !== "global" ? (
             <Pager className={classes.pager}>
               <Pager.Item

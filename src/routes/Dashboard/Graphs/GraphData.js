@@ -142,7 +142,13 @@ export default class graphData {
       console.log(options);
       if (!this.data || reload) {
         console.log($.param(options));
-        callRenewBACK("/window", $.param(options), "POST", null, true)
+        let res = null;
+        if (process) {
+          res = callRenewBACK("/window", $.param(options), "POST", null, true);
+        } else {
+          res = callRenewBACK("/process", $.param(options), "POST", null, true);
+        }
+        res
           .then(data => {
             console.log(data);
             if (!data) {

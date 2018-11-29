@@ -105,7 +105,9 @@ export function callBACK(endpoint, data, method, extraHeaders, bearer) {
     method: method || "POST",
     headers: extraHeaders,
     body: data
-  }).then(data => data.json());
+  })
+    .then(data => data.text())
+    .then(text => (text.length > 0 ? JSON.parse(text) : {}));
 }
 
 export function callRenewBACK(endpoint, data, method, extraHeaders, bearer) {

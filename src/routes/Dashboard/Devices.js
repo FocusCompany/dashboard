@@ -42,6 +42,8 @@ const strings = new LocalizedStrings({
     error: "Could not get device list",
     errorGroup: "Could not get group list",
     errorDelete: "Could not delete device",
+    errorEmpty: "Group name can't be empty",
+    errorExists: "This group name already exists",
     successDelete: "Device deleted successfully",
     devices: "Devices",
     groups: "Groups",
@@ -63,6 +65,8 @@ const strings = new LocalizedStrings({
     error: "Impossible d'obtenir la liste des appareils",
     errorGroup: "Impossible d'obtenir la liste des groupes",
     errorDelete: "Impossible de supprimer l'appareil",
+    errorEmpty: "Un nom de groupe ne peut être vide",
+    errorExists: "Ce groupe existe déjà",
     successDelete: "Appareil supprimé",
     devices: "Appareils",
     groups: "Groupes",
@@ -251,6 +255,17 @@ class Devices extends Component {
     if (toCreate) {
       this.setState({ groupCreate: true });
     } else {
+      if (this.state.newGroup.trim() === "") {
+        Toast.error(strings.errorEmpty);
+        return;
+      } else if (
+        this.state.collections.find(
+          c => c.collections_name === this.state.newGroup
+        )
+      ) {
+        Toast.error(strings.errorExists);
+        return;
+      }
       await callRenewAPI(
         "/create_group",
         { collections_name: this.state.newGroup },

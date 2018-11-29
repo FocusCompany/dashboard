@@ -158,6 +158,11 @@ class SignForm extends Component {
                   }
                   value={this.state[name]}
                   onChange={this.handleChange(name)}
+                  onKeyPress={ev => {
+                    if (ev.key === "Enter") {
+                      this.handleSubmit(ev);
+                    }
+                  }}
                 />
               </FormControl>
             );
