@@ -33,7 +33,12 @@ const COLORS = [
 export class PieGraph extends Graph {
   render() {
     var legend = this.props.legend ? (
-      <Legend layout="vertical" align="right" verticalAlign="middle" />
+      <Legend
+        layout="vertical"
+        align="right"
+        verticalAlign="middle"
+        wrapperStyle={{ height: "100%", overflowY: "scroll" }}
+      />
     ) : null;
     var tooltip = this.props.tooltip ? (
       <Tooltip formatter={seconds => getTimeFromSeconds(seconds)} />

@@ -9,6 +9,8 @@ import Button from "@material-ui/core/Button";
 import { callAPI, Toast } from "../../utils";
 import { Typography } from "@material-ui/core";
 
+const Logo = require("../../2019_logo_focus.png");
+
 const strings = new LocalizedStrings({
   en: {
     loggingIn: "Logging in",
@@ -50,8 +52,17 @@ const styles = theme => ({
     width: 300,
     maxWidth: "90%"
   },
+  logo: {
+    maxWidth: "20%",
+    maxHeight: "48px",
+    margin: "auto",
+    display: "block",
+    marginTop: "16px"
+  },
   reset: {
-    margin: "8px"
+    margin: "8px",
+    textAlign: "center",
+    alignItems: "center"
   }
 });
 
@@ -150,6 +161,7 @@ class SignForm extends Component {
         : [strings.email, strings.password];
     return (
       <form onSubmit={this.handleSubmit}>
+        <img className={classes.logo} src={Logo} alt="Focus" />
         <Grid container direction="column" justify="center" alignItems="center">
           {inputs.map(name => {
             return (
