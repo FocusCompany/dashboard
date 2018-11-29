@@ -92,9 +92,17 @@ class Account extends Component {
     if (this.state.password.length === 0)
       return Toast.error(strings.updateNoPassword);
 
-    callRenewAPI("/update_user", this.state, "PUT", null, true)
+    const toUpdate = { password: this.state.password };
+    if (this.state.first_name !== "")
+      toUpdate.first_name = this.state.first_name;
+    if (this.state.last_name !== "") toUpdate.last_name = this.state.last_name;
+    if (this.state.new_password !== "")
+      toUpdate.new_password = this.state.new_password;
+    if (this.state.email !== "") toUpdate.email = this.state.email;
+
+    callRenewAPI("/update_user", toUpdate, "PUT", null, true)
       .then(res => {
-        Toast.info(strings.updateSuccess);
+        Toast.success(strings.updateSuccess);
         this.resetFields();
       })
       .catch(err => {

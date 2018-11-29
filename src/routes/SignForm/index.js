@@ -16,6 +16,7 @@ const strings = new LocalizedStrings({
     signIn: "sign_in",
     alreadyAccount: "Already have an account ?",
     noAccount: "Don't have an account ?",
+    empty: "Fields can't be empty",
     firstName: "first_name",
     lastName: "last_name",
     email: "email",
@@ -29,6 +30,7 @@ const strings = new LocalizedStrings({
     signIn: "connexion",
     alreadyAccount: "Vous avez déjà un compte ?",
     noAccount: "Pas de compte ?",
+    empty: "Les champs ne peuvent pas être vides",
     firstName: "prénom",
     lastName: "nom",
     email: "courriel",
@@ -112,6 +114,15 @@ class SignForm extends Component {
   };
 
   signUp = () => {
+    if (
+      this.state.last_name.trim() === "" ||
+      this.state.first_name.trim() === "" ||
+      this.state.email.trim() === "" ||
+      this.state.password.trim() === ""
+    ) {
+      Toast.error(strings.empty);
+      return;
+    }
     callAPI(
       "/register",
       {
