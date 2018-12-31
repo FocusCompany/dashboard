@@ -1,0 +1,70 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header card-header-danger">
+                        <h4 class="card-title">Edit Profile</h4>
+                        <p class="card-category">Complete your profile</p>
+                    </div>
+                    <div class="card-body">
+                        <form name="form" (ngSubmit)="f.form.valid && updateProfil()" #f="ngForm" novalidate>
+                            <div class="row">
+                                <div class="form-group col-md-6" [ngClass]="{ 'has-error': f.submitted && !first_name.valid }">
+                                    <label for="first_name">First Name</label>
+                                    <input type="text" class="form-control" id="first_name" name="first_name" [(ngModel)]="model.first_name" #first_name="ngModel" required/>
+                                    <div *ngIf="f.submitted && !first_name.valid" class="help-block">First Name is required</div>
+                                </div>
+                                <div class="form-group col-md-6" [ngClass]="{ 'has-error': f.submitted && !last_name.valid }">
+                                    <label for="last_name">Last Name</label>
+                                    <input type="text" class="form-control" id="last_name" name="last_name" [(ngModel)]="model.last_name" #last_name="ngModel" required/>
+                                    <div *ngIf="f.submitted && !last_name.valid" class="help-block">Last Name is required</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-8" [ngClass]="{ 'has-error': f.submitted && !email.valid }">
+                                    <label for="email">Email</label>
+                                    <input type="text" class="form-control" id="email" name="email" [(ngModel)]="model.email" #email="ngModel" required/>
+                                    <div *ngIf="f.submitted && !email.valid" class="help-block">Email is required</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6" [ngClass]="{ 'has-error': f.submitted && !new_password.valid }">
+                                    <label for="new_password">New Password</label>
+                                    <input type="password" class="form-control" id="new_password" name="password_two" [(ngModel)]="model.new_password" #new_password="ngModel" required/>
+                                    <div *ngIf="f.submitted && !new_password.valid" class="help-block">Password is required</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
+                                    <label for="password">Password</label>
+                                    <input type="password" class="form-control" id="password" name="password" [(ngModel)]="model.password" #password="ngModel" required/>
+                                    <div *ngIf="f.submitted && !password.valid" class="help-block">Password is required</div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button mat-raised-button [disabled]="loading" type="submit" class="btn btn-danger pull-right">Update Profile</button>
+                                <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-profile">
+                    <div class="card-avatar">
+                        <a href="#pablo">
+                            <img class="img" src="./assets/img/faces/etienne.jpg"/>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="card-category text-gray">CEO / Co-Founder</h6>
+                        <h4 class="card-title">Etienne Pasteur</h4>
+                        <p class="card-description">I'm not a nerd - I'm "socially challenged".</p>
+                        <a href="https://fr.linkedin.com/in/etiennepasteur" class="btn btn-danger btn-round">Follow</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

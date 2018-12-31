@@ -1,0 +1,70 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-success">
+                        <h4 class="card-title ">Device list</h4>
+                        <p class="card-category"> Here is your list of devices</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead class=" text-primary">
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Groups</th>
+                                <th>Actions</th>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let device of devices">
+                                    <td>{{device.id_devices}}</td>
+                                    <td>{{device.devices_name}}</td>
+                                    <td>
+                                            <span *ngFor="let collection of device.collections; let isLast = last">
+                                                <span *ngIf="!isLast" [innerHTML]="collection.collections_name + ',&nbsp;'"></span>
+                                                <span *ngIf="isLast" [innerHTML]="collection.collections_name"></span>
+                                            </span>
+                                    </td>
+                                    <td>
+                                        <i class="material-icons action" (click)="editDevice(device)">edit</i>
+                                        <i class="material-icons action" (click)="deleteDevice(device.id_devices)">delete_outline</i>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <button mat-raised-button type="submit" class="btn btn-success pull-right" (click)="addDevice()">Add device</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header card-header-info">
+                        <h4 class="card-title ">Group list</h4>
+                        <p class="card-category"> Here is your list of groups</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead class=" text-primary">
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Action</th>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let collection of collections">
+                                    <td>{{collection.id_collections}}</td>
+                                    <td>{{collection.collections_name}}</td>
+                                    <td><i class="material-icons action" (click)="deleteGroup(collection.collections_name)">delete_outline</i></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <button mat-raised-button type="submit" class="btn btn-info pull-right" (click)="addGroup()">Add group</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

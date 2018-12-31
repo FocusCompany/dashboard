@@ -1,0 +1,31 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header card-header-warning">
+                        <h4 class="card-title ">Filter list</h4>
+                        <p class="card-category"> Here is your list of your filters</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead class=" text-primary">
+                                <th>Name</th>
+                                <th>Action</th>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let filter of filters">
+                                    <td>{{filter}}</td>
+                                    <td><i class="material-icons action" (click)="deleteFilter(filter)">delete_outline</i></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <button mat-raised-button type="submit" class="btn btn-warning pull-right" (click)="addFilter()">Add filter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

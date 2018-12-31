@@ -1,0 +1,18 @@
+<h2 mat-dialog-title>Add a filter</h2>
+<mat-dialog-content>
+    <ng-select [(items)]="process"
+               bindLabel="name"
+               bindValue="name"
+               [multiple]="true"
+               placeholder="Select process"
+               [(ngModel)]="selectedProcess">
+    </ng-select>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <div class="container-fluid">
+        <div class="col-sm-12 text-center">
+            <button mat-raised-button type="submit" class="btn " (click)="close()">Close</button>
+            <button mat-raised-button type="submit" class="btn btn-warning" (click)="save()">Add</button>
+        </div>
+    </div>
+</mat-dialog-actions>

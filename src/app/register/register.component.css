@@ -1,0 +1,21 @@
+.col-centered{
+    float: none;
+    margin: 0 auto;
+}
+
+.logo {
+    width: 100%;
+    margin: 25px 0;
+}
+
+.logo-img {
+    width: 100%;
+}
+
+img {
+    width: 100%;
+}
+
+.card {
+    margin-top: 45px;
+}
