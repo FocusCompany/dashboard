@@ -5,3 +5,8 @@ export class Process {
     end: Date;
     afk: boolean;
 }
+
+export class Dnd {
+    UserId: string;
+    Activations: number;
+}

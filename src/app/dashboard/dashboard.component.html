@@ -47,13 +47,13 @@
                             <i class="material-icons">brightness_2</i>
                         </div>
                         <p class="card-category">Do not disturb</p>
-                        <h3 class="card-title">9
+                        <h3 class="card-title">{{ dndActivations }}
                             <small>Times</small>
                         </h3>
                     </div>
                     <div class="card-footer">
                         <div class="stats">
-                            <i class="material-icons">date_range</i> Last 24 Hours
+                            <i class="material-icons">date_range</i> All time
                         </div>
                     </div>
                 </div>
@@ -66,13 +66,13 @@
                             <i class="material-icons">work</i>
                         </div>
                         <p class="card-category">Working Hours</p>
-                        <h3 class="card-title">3
+                        <h3 class="card-title">{{ hoursWorked }}
                             <small>Hours</small>
                         </h3>
                     </div>
                     <div class="card-footer">
                         <div class="stats">
-                            <i class="material-icons">date_range</i> Last 24 Hours
+                            <i class="material-icons">date_range</i> On selected period
                         </div>
                     </div>
                 </div>
@@ -85,13 +85,13 @@
                             <i class="material-icons">free_breakfast</i>
                         </div>
                         <p class="card-category">AFK</p>
-                        <h3 class="card-title">7
+                        <h3 class="card-title">{{ hoursAfk}}
                             <small>Hours</small>
                         </h3>
                     </div>
                     <div class="card-footer">
                         <div class="stats">
-                            <i class="material-icons">date_range</i> Last 24 Hours
+                            <i class="material-icons">date_range</i> On selected period
                         </div>
                     </div>
                 </div>
@@ -104,7 +104,7 @@
                             <i class="material-icons">equalizer</i>
                         </div>
                         <p class="card-category">Productivity score</p>
-                        <h3 class="card-title">76
+                        <h3 class="card-title">{{ productivityScore | number:'1.2-2' }}
                             <small>%</small>
                         </h3>
                     </div>

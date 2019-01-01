@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import * as Chartist from 'chartist';
-import {Process} from '../_models/stats';
+import {Dnd, Process} from '../_models/stats';
 import {StatsService} from '../_services/stats.service';
 import {NgSelectModule} from '@ng-select/ng-select';
 import {DevicesService} from '../_services/devices.service';
@@ -22,6 +22,10 @@ export class DashboardComponent implements OnInit {
     collections = [];
     devices = [];
     date = {begin: moment().startOf('day').subtract(7, 'd').toDate(), end: moment().startOf('day').toDate()};
+    dndActivations = 0;
+    hoursWorked = '0';
+    hoursAfk = '0';
+    productivityScore = 0;
 
     constructor(private statsService: StatsService, private devicesService: DevicesService,
                 private collectionsService: CollectionsService) {
@@ -186,10 +190,23 @@ export class DashboardComponent implements OnInit {
 
     refreshData() {
         const device = this.selectedDevice === 'ALL' ? null : this.selectedDevice;
-        console.log();
         this.statsService.getProcess(device, this.selectedCollections, this.date.begin.toISOString(),
             moment(this.date.end).add(1, 'd').toISOString()).subscribe((process: Array<Process>) => {
-            console.log(process);
+            let durationWork = 0, durationAfk = 0;
+            if (process) {
+                process.forEach((obj: Process) => {
+                    obj.afk === false ? durationWork += moment.duration(moment(obj.end).diff(moment(obj.start))).asSeconds() :
+                        durationAfk += moment.duration(moment(obj.end).diff(moment(obj.start))).asSeconds();
+                });
+            }
+            this.hoursWorked = moment.utc(durationWork * 1000).format('HH:mm');
+            this.hoursAfk = moment.utc(durationAfk * 1000).format('HH:mm');
+            const numberOfDays = moment.duration(moment(this.date.end).add(1, 'd').diff(this.date.begin)).asDays();
+            this.productivityScore = (((moment.duration(this.hoursWorked).asMinutes() * 100) / (7 * 60 * numberOfDays)) -
+                (moment.duration(this.hoursAfk).asMinutes() * moment.duration(this.hoursWorked).asMinutes()) / 100);
+        });
+        this.statsService.getDnd().subscribe((obj: Dnd) => {
+            this.dndActivations = obj.Activations;
         });
     }
 
