@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import * as Chartist from 'chartist';
 import 'chartist-plugin-legend';
-import {Dnd, Process} from '../_models/stats';
+import {Dnd, Process, UserWindow} from '../_models/stats';
 import {StatsService} from '../_services/stats.service';
 import {DevicesService} from '../_services/devices.service';
 import {Device} from '../_models/device';
@@ -34,6 +34,9 @@ export class DashboardComponent implements OnInit {
     isDataActivitySummaryChart = false;
     isDataTimeSpentChart = false;
     isDataProcessChart = false;
+    isDataWindowChart = false;
+    processName = '';
+    windows: Array<UserWindow> = [];
 
     constructor(private statsService: StatsService, private devicesService: DevicesService,
                 private collectionsService: CollectionsService) {
@@ -57,6 +60,49 @@ export class DashboardComponent implements OnInit {
         });
 
         this.refreshData();
+    }
+
+    getWindowOfProcess(processName: string) {
+        this.processName = processName;
+        if (this.windows) {
+            const dataWindowChart = {labels: [], series: []};
+            this.windows.forEach((obj: UserWindow) => {
+                if (obj.afk === false && obj.process === processName) {
+                    const indexProcess = _.indexOf(dataWindowChart.labels, obj.window);
+                    if (indexProcess === -1) {
+                        dataWindowChart.labels.push(obj.window);
+                        dataWindowChart.series.push(moment.duration(moment(obj.end).diff(moment(obj.start))).asMinutes());
+
+                    } else {
+                        dataWindowChart.series[indexProcess] += moment.duration(moment(obj.end).diff(moment(obj.start))).asMinutes();
+                    }
+                    this.isDataWindowChart = true;
+                }
+            });
+            const windowChart = new Chartist.Bar('#windowChart', dataWindowChart, {
+                horizontalBars: true,
+                distributeSeries: true,
+                axisX: {
+                    showGrid: true,
+                    onlyInteger: true,
+                    labelInterpolationFnc: function (value) {
+                        return value + ' min';
+                    }
+                },
+                axisY: {
+                    showGrid: false,
+                    offset: 200
+                },
+                width: '100%',
+                height: dataWindowChart.series.length * 65 + 'px',
+            }).on('draw', (data) => {
+                if (data.type === 'bar') {
+                    data.element.attr({
+                        style: 'stroke-width: 30px'
+                    });
+                }
+            });
+        }
     }
 
     updateCharts(dataActivitySummaryChart: any, dataTimeSpentChart: any, dataProcessChart: any) {
@@ -97,10 +143,10 @@ export class DashboardComponent implements OnInit {
             },
             width: '100%',
             height: dataProcessChart.series.length * 45 + 'px',
-        }).on('draw', function (data) {
+        }).on('draw', (data) => {
             if (data.type === 'bar') {
                 data.element._node.onclick = () => {
-                    console.log(data.axisY.ticks[data.seriesIndex]);
+                    this.getWindowOfProcess(data.axisY.ticks[data.seriesIndex]);
                 };
                 data.element.attr({
                     style: 'stroke-width: 30px'
@@ -124,8 +170,6 @@ export class DashboardComponent implements OnInit {
                     dataHeatMap.push(activity);
                 }
             });
-            console.log(dataHeatMap);
-
             dataHeatMap.forEach((data: any) => {
                 let addOrNot = true;
                 this.dataHeatMap.forEach((obj: any) => {
@@ -141,7 +185,6 @@ export class DashboardComponent implements OnInit {
                 }
             });
         }
-        console.log(this.dataHeatMap);
     }
 
     refreshData() {
@@ -149,10 +192,15 @@ export class DashboardComponent implements OnInit {
         this.isDataActivitySummaryChart = false;
         this.isDataTimeSpentChart = false;
         this.isDataProcessChart = false;
+        this.isDataWindowChart = false;
 
         const device = this.selectedDevice === 'ALL' ? null : this.selectedDevice;
         this.statsService.getProcess(device, this.selectedCollections, this.date.begin.toISOString(),
             moment(this.date.end).add(1, 'd').toISOString()).subscribe((process: Array<Process>) => {
+            this.statsService.getWindow(device, this.selectedCollections, this.date.begin.toISOString(),
+                moment(this.date.end).add(1, 'd').toISOString()).subscribe((window: Array<UserWindow>) => {
+                    this.windows = window;
+            });
             let durationWork = 0, durationAfk = 0;
             const dataTimeSpentChart = {labels: [], series: []};
             const dataProcessChart = {labels: [], series: []};
