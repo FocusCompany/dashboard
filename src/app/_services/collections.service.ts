@@ -10,7 +10,7 @@ export class CollectionsService {
     constructor(private http: HttpClient) {}
 
     public getCollections(): Observable<Array<Collection>> {
-        return this.http.get<Array<Collection>>('http://auth.thefocuscompany.me:3000/api/v1/list_group').map((payload: any) => {
+        return this.http.get<Array<Collection>>('/auth/api/v1/list_group').map((payload: any) => {
             if (payload && payload.collections) {
                 return payload.collections;
             }
@@ -24,15 +24,15 @@ export class CollectionsService {
             }),
             body: {collections_name: collections_name}
         };
-        return this.http.delete<any>('http://auth.thefocuscompany.me:3000/api/v1/delete_group', options);
+        return this.http.delete<any>('/auth/api/v1/delete_group', options);
     }
 
     public addCollections(collections_name: string): Observable<any> {
-        return this.http.post<any>('http://auth.thefocuscompany.me:3000/api/v1/create_group', {collections_name});
+        return this.http.post<any>('/auth/api/v1/create_group', {collections_name});
     }
 
     public addDeviceToCollection(collections_name: string, device_id: string): Observable<any> {
-        return this.http.post<any>('http://auth.thefocuscompany.me:3000/api/v1/add_device_to_group', {collections_name, device_id});
+        return this.http.post<any>('/auth/api/v1/add_device_to_group', {collections_name, device_id});
     }
 
     public deleteDeviceFromCollection(collections_name: string, device_id: string): Observable<Array<Device>> {
@@ -42,6 +42,6 @@ export class CollectionsService {
             }),
             body: {collections_name, device_id}
         };
-        return this.http.delete<any>('http://auth.thefocuscompany.me:3000/api/v1/remove_device_from_group', options);
+        return this.http.delete<any>('/auth/api/v1/remove_device_from_group', options);
     }
 }

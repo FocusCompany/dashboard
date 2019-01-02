@@ -8,7 +8,7 @@ export class AuthenticationService {
     constructor(private http: HttpClient) { }
 
     login(email: string, password: string) {
-        return this.http.post<any>('http://auth.thefocuscompany.me:3000/api/v1/login', {email: email, password: password})
+        return this.http.post<any>('/auth/api/v1/login', {email: email, password: password})
                    .map(user => {
                        if (user && user.token) {
                            localStorage.setItem('currentUser', JSON.stringify(user));
@@ -20,7 +20,7 @@ export class AuthenticationService {
     renewToken() {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         if (currentUser && currentUser.token) {
-            return this.http.post<any>('http://auth.thefocuscompany.me:3000/api/v1/renew_jwt', {token: currentUser.token})
+            return this.http.post<any>('/auth/api/v1/renew_jwt', {token: currentUser.token})
                        .map(user => {
                            if (user && user.token) {
                                localStorage.removeItem('currentUser');

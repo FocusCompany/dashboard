@@ -17,7 +17,7 @@ export class StatsService {
         if (device) { body['device'] = device; }
         if (group) { body['group'] = group; }
 
-        return this.http.post<Array<Process>>('http://backend.thefocuscompany.me:8080/process', this.toUrlEncoded(body), {headers});
+        return this.http.post<Array<Process>>('/backend/process', this.toUrlEncoded(body), {headers});
     }
 
     public getWindow(device: string, group: string, from: string, to: string): Observable<Array<UserWindow>> {
@@ -27,10 +27,10 @@ export class StatsService {
         if (device) { body['device'] = device; }
         if (group) { body['group'] = group; }
 
-        return this.http.post<Array<UserWindow>>('http://backend.thefocuscompany.me:8080/window', this.toUrlEncoded(body), {headers});
+        return this.http.post<Array<UserWindow>>('/backend/window', this.toUrlEncoded(body), {headers});
     }
 
     public getDnd(): Observable<Dnd> {
-        return this.http.get<Dnd>('http://backend.thefocuscompany.me:8080/dnd');
+        return this.http.get<Dnd>('/backend/dnd');
     }
 }

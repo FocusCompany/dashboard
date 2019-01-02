@@ -7,17 +7,17 @@ export class FiltersService {
     }
 
     getFilters(): any {
-        return this.http.get('http://backend.thefocuscompany.me:8080/filters');
+        return this.http.get('/backend/filters');
     }
 
     setFilters(filters: string) {
         let headers = new HttpHeaders({
             'Content-Type': 'application/x-www-form-urlencoded'
         });
-        return this.http.post('http://backend.thefocuscompany.me:8080/filters', 'filters=' + filters, {headers});
+        return this.http.post('/backend/filters', 'filters=' + filters, {headers});
     }
 
     getProcess() {
-        return this.http.post('http://backend.thefocuscompany.me:8080/process/list', null);
+        return this.http.post('/backend/process/list', null);
     }
 }
