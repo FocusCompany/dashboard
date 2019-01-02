@@ -117,54 +117,47 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-5">
+            <div class="col-md-9">
                 <div class="card card-chart">
-                    <div class="card-header card-header-success">
-                        <div class="ct-chart" id="dailySalesChart"></div>
+                    <div class="card-header">
+                        <calendar-heatmap
+                                [data]="dataHeatMap">
+                        </calendar-heatmap>
                     </div>
                     <div class="card-body">
-                        <h4 class="card-title">Daily Sales</h4>
-                        <p class="card-category">
-                            <span class="text-success"><i class="fa fa-long-arrow-up"></i> 55% </span> increase in today sales.</p>
-                    </div>
-                    <div class="card-footer">
-                        <div class="stats">
-                            <i class="material-icons">access_time</i> updated 4 minutes ago
-                        </div>
+                        <h4 class="card-title">Heatmap</h4>
                     </div>
                 </div>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-3">
                 <div class="card card-chart">
-                    <div class="card-header card-header-warning">
-                        <div class="ct-chart" id="websiteViewsChart"></div>
+                    <div class="card-header">
+                        <div class="ct-chart" id="activitySummaryChart"></div>
                     </div>
                     <div class="card-body">
-                        <h4 class="card-title">Email Subscriptions</h4>
-                        <p class="card-category">Last Campaign Performance</p>
-                    </div>
-                    <div class="card-footer">
-                        <div class="stats">
-                            <i class="material-icons">access_time</i> campaign sent 2 days ago
-                        </div>
+                        <h4 class="card-title">Activity summary</h4>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-9">
                 <div class="card card-chart">
-                    <div class="card-header card-header-danger">
-                        <div class="ct-chart" id="completedTasksChart"></div>
+                    <div class="card-header">
+                        <div class="ct-chart" id="barChart"></div>
                     </div>
                     <div class="card-body">
-                        <h4 class="card-title">Completed Tasks</h4>
-                        <p class="card-category">Last Campaign Performance</p>
+                        <h4 class="card-title">Detailed activity</h4>
                     </div>
-                    <div class="card-footer">
-                        <div class="stats">
-                            <i class="material-icons">access_time</i> campaign sent 2 days ago
-                        </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-chart">
+                    <div class="card-header">
+                        <div class="ct-chart" id="timeSpentChart"></div>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title">Total time spent</h4>
                     </div>
                 </div>
             </div>

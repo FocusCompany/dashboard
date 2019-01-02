@@ -1,5 +1,6 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import * as Chartist from 'chartist';
+import 'chartist-plugin-legend';
 import {Dnd, Process} from '../_models/stats';
 import {StatsService} from '../_services/stats.service';
 import {NgSelectModule} from '@ng-select/ng-select';
@@ -13,7 +14,8 @@ import {SatDatepickerInputEvent, SatDatepickerRangeValue} from 'saturn-datepicke
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
-    styleUrls: ['./dashboard.component.css']
+    styleUrls: ['./dashboard.component.scss'],
+    encapsulation: ViewEncapsulation.None,
 })
 export class DashboardComponent implements OnInit {
 
@@ -26,68 +28,30 @@ export class DashboardComponent implements OnInit {
     hoursWorked = '0';
     hoursAfk = '0';
     productivityScore = 0;
+    timeLastUpdate = 0;
+
+    dataHeatMap = [{
+        'date': '2016-01-01',
+        'total': 17164,
+        'details': [{
+            'name': 'Project 1',
+            'date': '2016-01-01 12:30:45',
+            'value': 9192
+        }, {
+            'name': 'Project 2',
+            'date': '2016-01-01 13:37:00',
+            'value': 6753
+        },
+            {
+                'name': 'Project N',
+                'date': '2016-01-01 17:52:41',
+                'value': 1219
+            }]
+    }];
 
     constructor(private statsService: StatsService, private devicesService: DevicesService,
                 private collectionsService: CollectionsService) {
     }
-
-    startAnimationForLineChart(chart) {
-        let seq: any, delays: any, durations: any;
-        seq = 0;
-        delays = 80;
-        durations = 500;
-
-        chart.on('draw', function (data) {
-            if (data.type === 'line' || data.type === 'area') {
-                data.element.animate({
-                    d: {
-                        begin: 600,
-                        dur: 700,
-                        from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(),
-                        to: data.path.clone().stringify(),
-                        easing: Chartist.Svg.Easing.easeOutQuint
-                    }
-                });
-            } else if (data.type === 'point') {
-                seq++;
-                data.element.animate({
-                    opacity: {
-                        begin: seq * delays,
-                        dur: durations,
-                        from: 0,
-                        to: 1,
-                        easing: 'ease'
-                    }
-                });
-            }
-        });
-
-        seq = 0;
-    };
-
-    startAnimationForBarChart(chart) {
-        let seq2: any, delays2: any, durations2: any;
-
-        seq2 = 0;
-        delays2 = 80;
-        durations2 = 500;
-        chart.on('draw', function (data) {
-            if (data.type === 'bar') {
-                seq2++;
-                data.element.animate({
-                    opacity: {
-                        begin: seq2 * delays2,
-                        dur: durations2,
-                        from: 0,
-                        to: 1,
-                        easing: 'ease'
-                    }
-                });
-            }
-        });
-
-        seq2 = 0;
-    };
 
     ngOnInit() {
         this.devicesService.getDevices().subscribe((devices: Array<Device>) => {
@@ -107,85 +71,54 @@ export class DashboardComponent implements OnInit {
         });
 
         this.refreshData();
+    }
 
-        /* ----------==========     Daily Sales Chart initialization For Documentation    ==========---------- */
+    updateCharts(dataActivitySummaryChart: any, dataTimeSpentChart: any, dataBarChart: any) {
+        const activitySummaryChart = new Chartist.Pie('#activitySummaryChart', dataActivitySummaryChart, {
+            donut: true,
+            donutWidth: 40,
+            startAngle: 270,
+            total: 100,
+            showLabel: true,
+            width: '100%',
+            height: '187px',
+        });
 
-        const dataDailySalesChart: any = {
-            labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
-            series: [
-                [12, 17, 7, 17, 23, 18, 38]
+        const timeSpentChart = new Chartist.Pie('#timeSpentChart', dataTimeSpentChart, {
+            width: '100%',
+            height: '187px',
+            showLabel: false,
+            plugins: [
+                Chartist.plugins.legend({
+                    position: 'bottom'
+                })
             ]
-        };
+        });
 
-        const optionsDailySalesChart: any = {
-            lineSmooth: Chartist.Interpolation.cardinal({
-                tension: 0
-            }),
-            low: 0,
-            high: 50, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-            chartPadding: {top: 0, right: 0, bottom: 0, left: 0},
-        }
-
-        var dailySalesChart = new Chartist.Line('#dailySalesChart', dataDailySalesChart, optionsDailySalesChart);
-
-        this.startAnimationForLineChart(dailySalesChart);
-
-
-        /* ----------==========     Completed Tasks Chart initialization    ==========---------- */
-
-        const dataCompletedTasksChart: any = {
-            labels: ['12p', '3p', '6p', '9p', '12p', '3a', '6a', '9a'],
-            series: [
-                [230, 750, 450, 300, 280, 240, 200, 190]
-            ]
-        };
-
-        const optionsCompletedTasksChart: any = {
-            lineSmooth: Chartist.Interpolation.cardinal({
-                tension: 0
-            }),
-            low: 0,
-            high: 1000, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-            chartPadding: {top: 0, right: 0, bottom: 0, left: 0}
-        }
-
-        var completedTasksChart = new Chartist.Line('#completedTasksChart', dataCompletedTasksChart, optionsCompletedTasksChart);
-
-        // start animation for the Completed Tasks Chart - Line Chart
-        this.startAnimationForLineChart(completedTasksChart);
-
-
-        /* ----------==========     Emails Subscription Chart initialization    ==========---------- */
-
-        var datawebsiteViewsChart = {
-            labels: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
-            series: [
-                [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895]
-
-            ]
-        };
-        var optionswebsiteViewsChart = {
+        const barChart = new Chartist.Bar('#barChart', dataBarChart, {
+            horizontalBars: true,
+            distributeSeries: true,
             axisX: {
-                showGrid: false
-            },
-            low: 0,
-            high: 1000,
-            chartPadding: {top: 0, right: 5, bottom: 0, left: 0}
-        };
-        var responsiveOptions: any[] = [
-            ['screen and (max-width: 640px)', {
-                seriesBarDistance: 5,
-                axisX: {
-                    labelInterpolationFnc: function (value) {
-                        return value[0];
-                    }
+                showGrid: true,
+                onlyInteger: true,
+                labelInterpolationFnc: function (value) {
+                    return value + ' min';
                 }
-            }]
-        ];
-        var websiteViewsChart = new Chartist.Bar('#websiteViewsChart', datawebsiteViewsChart, optionswebsiteViewsChart, responsiveOptions);
+            },
+            axisY: {
+                showGrid: false,
+                offset: 100
+            },
+            width: '100%',
+            height: dataBarChart.series.length * 45 + 'px',
+        }).on('draw', function (data) {
+            if (data.type === 'bar') {
+                data.element.attr({
+                    style: 'stroke-width: 30px'
+                });
+            }
+        });
 
-        //start animation for the Emails Subscription Chart
-        this.startAnimationForBarChart(websiteViewsChart);
     }
 
     refreshData() {
@@ -193,17 +126,36 @@ export class DashboardComponent implements OnInit {
         this.statsService.getProcess(device, this.selectedCollections, this.date.begin.toISOString(),
             moment(this.date.end).add(1, 'd').toISOString()).subscribe((process: Array<Process>) => {
             let durationWork = 0, durationAfk = 0;
+            const dataTimeSpentChart = {labels: [], series: []};
+            const dataBarChart = {labels: [], series: []};
+            const dataActivitySummaryChart = {labels: [], series: []};
             if (process) {
                 process.forEach((obj: Process) => {
-                    obj.afk === false ? durationWork += moment.duration(moment(obj.end).diff(moment(obj.start))).asSeconds() :
-                        durationAfk += moment.duration(moment(obj.end).diff(moment(obj.start))).asSeconds();
+                    if (obj.afk === false) {
+                        durationWork += moment.duration(moment(obj.end).diff(moment(obj.start))).asSeconds();
+                        dataBarChart.labels.push(obj.process);
+                        dataBarChart.series.push(moment.duration(moment(obj.end).diff(moment(obj.start))).asMinutes());
+                        dataTimeSpentChart.labels.push(obj.process);
+                        dataTimeSpentChart.series.push(moment.duration(moment(obj.end).diff(moment(obj.start))).asMinutes());
+                    } else if (obj.afk === true) {
+                        durationAfk += moment.duration(moment(obj.end).diff(moment(obj.start))).asSeconds()
+                    }
                 });
+            }
+            if (durationWork !== 0) {
+                dataActivitySummaryChart.labels.push('Work');
+                dataActivitySummaryChart.series.push(((durationWork * 100) / (durationWork + durationAfk)));
+            }
+            if (durationAfk !== 0) {
+                dataActivitySummaryChart.labels.push('Afk');
+                dataActivitySummaryChart.series.push(((durationAfk * 100) / (durationWork + durationAfk)));
             }
             this.hoursWorked = moment.utc(durationWork * 1000).format('HH:mm');
             this.hoursAfk = moment.utc(durationAfk * 1000).format('HH:mm');
             const numberOfDays = moment.duration(moment(this.date.end).add(1, 'd').diff(this.date.begin)).asDays();
             this.productivityScore = (((moment.duration(this.hoursWorked).asMinutes() * 100) / (7 * 60 * numberOfDays)) -
-                (moment.duration(this.hoursAfk).asMinutes() * moment.duration(this.hoursWorked).asMinutes()) / 100);
+                (moment.duration(this.hoursAfk).asMinutes() + moment.duration(this.hoursWorked).asMinutes()) / 100);
+            this.updateCharts(dataActivitySummaryChart, dataTimeSpentChart, dataBarChart);
         });
         this.statsService.getDnd().subscribe((obj: Dnd) => {
             this.dndActivations = obj.Activations;

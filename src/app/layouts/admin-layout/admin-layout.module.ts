@@ -17,6 +17,7 @@ import {
 } from '@angular/material';
 import {NgSelectModule} from '@ng-select/ng-select';
 import {SatDatepickerModule, SatNativeDateModule} from 'saturn-datepicker';
+import {CalendarHeatmap} from 'angular2-calendar-heatmap';
 
 @NgModule({
   imports: [
@@ -39,6 +40,7 @@ import {SatDatepickerModule, SatNativeDateModule} from 'saturn-datepicker';
     UserProfileComponent,
     DevicesComponent,
     FiltersComponent,
+    CalendarHeatmap
   ]
 })
 
