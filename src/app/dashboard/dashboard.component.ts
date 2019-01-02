@@ -142,7 +142,7 @@ export class DashboardComponent implements OnInit {
                 offset: 100
             },
             width: '100%',
-            height: dataProcessChart.series.length * 45 + 'px',
+            height: dataProcessChart.series.length * 65 + 'px',
         }).on('draw', (data) => {
             if (data.type === 'bar') {
                 data.element._node.onclick = () => {
