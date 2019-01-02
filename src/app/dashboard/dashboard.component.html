@@ -120,9 +120,8 @@
             <div class="col-md-9">
                 <div class="card card-chart">
                     <div class="card-header">
-                        <calendar-heatmap
-                                [data]="dataHeatMap">
-                        </calendar-heatmap>
+                        <calendar-heatmap *ngIf="dataHeatMap.length" [data]="dataHeatMap" [overview]="overview"></calendar-heatmap>
+                        <div *ngIf="!dataHeatMap.length" class="card-category"><strong>No data</strong></div>
                     </div>
                     <div class="card-body">
                         <h4 class="card-title">Heatmap</h4>
@@ -132,7 +131,8 @@
             <div class="col-md-3">
                 <div class="card card-chart">
                     <div class="card-header">
-                        <div class="ct-chart" id="activitySummaryChart"></div>
+                        <div [hidden]="!isDataActivitySummaryChart" class="ct-chart" id="activitySummaryChart"></div>
+                        <div [hidden]="isDataActivitySummaryChart" class="card-category"><strong>No data</strong></div>
                     </div>
                     <div class="card-body">
                         <h4 class="card-title">Activity summary</h4>
@@ -144,7 +144,8 @@
             <div class="col-md-9">
                 <div class="card card-chart">
                     <div class="card-header">
-                        <div class="ct-chart" id="barChart"></div>
+                        <div [hidden]="!isDataProcessChart" class="ct-chart" id="processChart"></div>
+                        <div [hidden]="isDataProcessChart" class="card-category"><strong>No data</strong></div>
                     </div>
                     <div class="card-body">
                         <h4 class="card-title">Detailed activity</h4>
@@ -154,7 +155,8 @@
             <div class="col-md-3">
                 <div class="card card-chart">
                     <div class="card-header">
-                        <div class="ct-chart" id="timeSpentChart"></div>
+                        <div [hidden]="!isDataTimeSpentChart" class="ct-chart" id="timeSpentChart"></div>
+                        <div [hidden]="isDataTimeSpentChart" class="card-category"><strong>No data</strong></div>
                     </div>
                     <div class="card-body">
                         <h4 class="card-title">Total time spent</h4>
