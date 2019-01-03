@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  baseUrlAuth: 'https://auth.etiennepasteur.com:3000',
-  baseUrlBack: 'https://backend.etiennepasteur.com:8080'
+  baseUrlAuth: 'https://auth.etiennepasteur.com',
+  baseUrlBack: 'https://backend.etiennepasteur.com'
 };
