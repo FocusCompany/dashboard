@@ -17,7 +17,7 @@ export class DevicesService {
     }
 
     public deleteDevices(device_id: string, keep_data?: string): Observable<Array<Device>> {
-        let options = {
+        const options = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
             }),

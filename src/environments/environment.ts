@@ -4,5 +4,7 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  baseUrlAuth: 'http://auth.thefocuscompany.me:3000',
+  baseUrlBack: 'http://backend.thefocuscompany.me:8080'
 };

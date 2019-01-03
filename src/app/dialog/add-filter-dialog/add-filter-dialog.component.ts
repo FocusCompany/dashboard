@@ -23,7 +23,7 @@ export class AddFilterDialogComponent implements OnInit {
 
     ngOnInit() {
         this.filterService.getProcess().subscribe((process: Array<string>) => {
-            let list = [];
+            const list = [];
             process.forEach(obj => {
                 list.push({name: obj});
             });

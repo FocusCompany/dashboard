@@ -11,7 +11,7 @@ export class FiltersService {
     }
 
     setFilters(filters: string) {
-        let headers = new HttpHeaders({
+        const headers = new HttpHeaders({
             'Content-Type': 'application/x-www-form-urlencoded'
         });
         return this.http.post('/backend/filters', 'filters=' + filters, {headers});
