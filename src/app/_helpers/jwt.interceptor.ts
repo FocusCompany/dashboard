@@ -14,7 +14,7 @@ export class JwtInterceptor implements HttpInterceptor {
                 private authenticationService: AuthenticationService) {}
 
     addAuthHeader(request: HttpRequest<any>, token: string) {
-        if (request.url.startsWith('http://backend.') && (request.method === 'POST' || request.method === 'GET')) {
+        if (request.url.includes('/backend') && (request.method === 'POST' || request.method === 'GET')) {
             request = request.clone({
                 setHeaders: {
                     Authorization: `${token}`

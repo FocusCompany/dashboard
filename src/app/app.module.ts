@@ -28,6 +28,7 @@ import {MatButtonModule, MatCardModule, MatDialogModule, MatIconModule, MatMenuM
 import {AddFilterDialogComponent} from './dialog/add-filter-dialog/add-filter-dialog.component';
 import {NgSelectModule} from '@ng-select/ng-select';
 import {ModifyDeviceDialogComponent} from './dialog/modify-device-dialog/modify-device-dialog.component';
+import {UrlInterceptor} from './_helpers/url.interceptor';
 
 @NgModule({
     imports: [
@@ -77,6 +78,11 @@ import {ModifyDeviceDialogComponent} from './dialog/modify-device-dialog/modify-
         FiltersService,
         CollectionsService,
         UserService,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: UrlInterceptor,
+            multi: true
+        },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: JwtInterceptor,

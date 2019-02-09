@@ -35,7 +35,7 @@ export class FiltersComponent implements OnInit {
         dialogRef.afterClosed().subscribe(
             (listProcess: Array<string>) => {
                 if (listProcess) {
-                    let filterList = JSON.parse(JSON.stringify(this.filters));
+                    const filterList = JSON.parse(JSON.stringify(this.filters));
                     listProcess.forEach((process: string) => {
                         if (filterList.indexOf(process) === -1) {
                             filterList.push(process);
@@ -56,7 +56,7 @@ export class FiltersComponent implements OnInit {
     }
 
     public deleteFilter(name: string) {
-        let filterList = JSON.parse(JSON.stringify(this.filters));
+        const filterList = JSON.parse(JSON.stringify(this.filters));
         filterList.splice(this.filters.indexOf(name), 1);
         this.filterService.setFilters(filterList.join(',')).subscribe(
             data => {
