@@ -119,7 +119,7 @@
         <div class="row">
             <div class="col-md-9">
                 <div class="card card-chart">
-                    <div class="card-header">
+                    <div class="card-header heatmap-container">
                         <calendar-heatmap *ngIf="dataHeatMap.length" [data]="dataHeatMap" [overview]="overview"></calendar-heatmap>
                         <div *ngIf="!dataHeatMap.length" class="card-category"><strong>No data</strong></div>
                     </div>

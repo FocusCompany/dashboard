@@ -16,6 +16,15 @@ $ct-series-colors: (
         #a748ca
 );
 
+.heatmap-container {
+  overflow-x: scroll;
+  overflow-y: hidden;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 .ct-legend {
   position: relative !important;
   z-index: 10;
